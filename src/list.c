@@ -57,7 +57,7 @@ void fonctionTest(){
 	List *fils=newList(*viewInt,*freeInt);
 	int *p=malloc(1 * sizeof(int));
 	*p=9;
-	listInsertFirst(fils,p);
+	listInsertLast(fils,p);
 	viewList(fils);
 	printf("\n");
 
@@ -72,6 +72,13 @@ void fonctionTest(){
 	LNode *test=fils->head;
 	listInsertAfter(fils,m,test);
 	viewList(fils);
+	printf("\n");
+
+	listRemoveLast(fils);
+	viewList(fils);
+		printf("\n");
+
+
 }
 
 void listInsertFirst(List * L, void * data) {
@@ -95,7 +102,7 @@ void listInsertLast(List * L, void * data) {
 	if(L->tail!=NULL)
 		L->tail->succ=last;
 	L->tail=last;
-	
+
 	if(L->head==NULL)
 		L->head=last;
 
@@ -104,40 +111,42 @@ void listInsertLast(List * L, void * data) {
 
 void listInsertAfter(List * L, void * data, LNode * ptrelm) {
 	LNode *new=newLNode(data);
+	if(ptrelm==L->tail)
+		L->tail=new;
 	new->succ=ptrelm->succ;
 	ptrelm->succ=new;
 	new->pred=ptrelm;
-	if(ptrelm==L->tail)
-		L->tail=new;
 	L->numelm++;
 }
 
 LNode* listRemoveFirst(List * L) {
 	assert(L->head);
 	assert(L->numelm!=0);
+
 	LNode *adieu=L->head;
 	L->head=adieu->succ;
 	if(L->tail==adieu)
 		L->tail=NULL;
-	L->freeData(adieu->data);
-	free(adieu);
 	L->numelm--;
+
+	return adieu;
 }
 
 LNode* listRemoveLast(List * L) {
 	assert(L->head);
-	assert(L->numelm==0);
+	assert(L->numelm!=0);
+
 	LNode *adieu=L->tail;
 	L->tail=adieu->pred;
-	if(L->head==adieu)
-		L->head=NULL;
-	L->freeData(adieu->data);
-	free(adieu);
+  L->tail->succ=NULL;
 	L->numelm--;
+
+	return adieu;
 }
 
 LNode* listRemoveNode(List * L, LNode * node) {
-	assert(L->numelm==0);
+	assert(L->numelm!=0);
+
 	node->pred->succ=node->succ;
 	node->succ->pred=node->pred;
 
@@ -146,7 +155,7 @@ LNode* listRemoveNode(List * L, LNode * node) {
 	if(L->head==node);
 	  L->head=node->succ;
 
-	L->freeData(node->data);
-	free(node);
 	L->numelm--;
+
+	return node;
 }
