@@ -58,7 +58,7 @@ OList * newOList(int (*preceed)(const void*, const void*),
  * (+) Si le paramètre deleteKey vaut 1
  *     Alors le pointeur de fonction freeKey de la structure OrderedList
  *     va servir à supprimer les clés (key) des éléments de la liste L.
- * 
+ *
  * (+) Si le paramètre deleteData vaut 0
  *     Alors les données (data) référencées par les éléments
  *     de la liste L ne sont pas supprimées ;
@@ -91,5 +91,7 @@ void OListInsert(OList * L, void * key, void * data);
  * à une liste doublement chaînée classique (non-ordonnée).
  */
 List* OListToList(const OList* L);
+
+void TestOList ();
 
 #endif // _OLIST_

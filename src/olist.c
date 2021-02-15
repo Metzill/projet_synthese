@@ -54,12 +54,12 @@ void freeOList(OList * L, int deleteKey, int deleteData) {
 }
 
 void viewOList(const OList * L) {
-	/* A TESTER */
 	assert(L!=NULL);
 	OLNode *Tete = L->head;
 	while(Tete!=NULL){
+      printf("Key : ");
 	    L->viewKey(Tete->key);
-	    printf("\n");
+      printf(" / Data : ");
 	    L->viewData(Tete->data);
 	    printf("\n");
 	    Tete=Tete->succ;
@@ -132,11 +132,19 @@ void TestOList () {
     viewOList(OL);
     OListInsert(OL,k3,d3);
     viewOList(OL);
-    freeOList(OL,1,1);
-    viewOList(OL);
-    OListInsert(OL,k4,d4);
-    viewOList(OL);
-    OListInsert(OL,k5,d5);
-    viewOList(OL);
-    freeOList(OL,1,1);
+    freeOList(OL,0,0);
+    OList *OL2 = newOList(compareInt,viewInt,viewInt,freeInt,freeInt);
+    printf("J'ai free\n");
+    viewOList(OL2);
+    OListInsert(OL2,k4,d4);
+    viewOList(OL2);
+    OListInsert(OL2,k5,d5);
+    OListInsert(OL2,k1,d1);
+    OListInsert(OL2,k2,d2);
+    OListInsert(OL2,k3,d3);
+    viewOList(OL2);
+    freeOList(OL2,1,1);
+    OList *OL3 = newOList(compareInt,viewInt,viewInt,freeInt,freeInt);
+    OListInsert(OL3,k3,d3);
+    viewOList(OL2);
 }
