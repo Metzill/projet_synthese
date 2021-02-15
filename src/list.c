@@ -41,15 +41,14 @@ void freeList(List * L, int deleteData) {
 }
 
 void viewList(const List * L) {
-	if(L!=NULL){
-		LNode *Tete = L->head;
-		while(Tete!=NULL){
-			L->viewData(Tete->data);
-			printf("\n");
-			Tete=Tete->succ;
-		}
-		free(Tete);
-	}
+    assert(L!=NULL);
+    LNode *Tete = L->head;
+    while(Tete!=NULL){
+        L->viewData(Tete->data);
+        printf("\n");
+        Tete=Tete->succ;
+    }
+    free(Tete);
 
 }
 

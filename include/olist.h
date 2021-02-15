@@ -55,7 +55,7 @@ OList * newOList(int (*preceed)(const void*, const void*),
  * Plusieurs possibilités de supprimer la liste ordonnée L :
  * (+) Si le paramètre deleteKey vaut 0
  *     Alors les clés (key) des éléments de la liste L ne sont pas supprimées ;
- * (+) Si le paramètre deleteData vaut 1
+ * (+) Si le paramètre deleteKey vaut 1
  *     Alors le pointeur de fonction freeKey de la structure OrderedList
  *     va servir à supprimer les clés (key) des éléments de la liste L.
  * 

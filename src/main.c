@@ -11,7 +11,7 @@
 #include "schedule.h"
 
 int main(int argv, char *argc[]) {
-	fonctionTest();
+	TestOList();
 	// Instance I = readInstance("./data/exemple");
 	// viewInstance(I);
 	// reorderInstance(I, EBST, LPT);
