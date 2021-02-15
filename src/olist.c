@@ -11,7 +11,6 @@
  * Renvoie le nouveau nœud créé.
  */
 static OLNode * newOLNode(void* key, void* data) {
-	/* A TESTER */
     OLNode *new = (OLNode  *) malloc(1 * sizeof(OLNode));
     new->key=key;
     new->data=data;
@@ -23,7 +22,6 @@ static OLNode * newOLNode(void* key, void* data) {
 OList * newOList(int (*preceed)(const void*, const void*),
 				void (*viewKey)(const void*), void (*viewData)(const void*),
 				void (*freeKey)(void*), void (*freeData)(void*)) {
-	/* A TESTER */
     OList *new = (OList*) malloc(1*sizeof(OList));
     new->numelm=0;
     new->preceed=preceed;
@@ -39,7 +37,6 @@ OList * newOList(int (*preceed)(const void*, const void*),
 void freeOList(OList * L, int deleteKey, int deleteData) {
 	assert(deleteKey == 0 || deleteKey == 1);
 	assert(deleteData == 0 || deleteData == 1);
-	/* A TESTER */
     OLNode *cur=L->head;
     while(cur!=NULL){
         if(deleteData==1)
@@ -68,7 +65,6 @@ void viewOList(const OList * L) {
 }
 
 void OListInsert(OList * L, void * key, void * data) {
-	/* A TESTER */
 	OLNode *newNode = newOLNode(key, data);
 	if(L->numelm==0) {
 	    L->head=newNode;
@@ -101,6 +97,14 @@ void OListInsert(OList * L, void * key, void * data) {
 
 List* OListToList(const OList* L) {
 	/* A FAIRE */
+	assert(L!=NULL);
+	List *nL = newList(OList->viewData,OList-freeData);
+    OLNode *Tete = L->head;
+    while(Tete!=NULL){
+        listInsertLast(nL,Tete->data);
+        Tete = Tete->succ;
+	}
+    return nL;
 }
 
 void TestOList () {
@@ -143,8 +147,11 @@ void TestOList () {
     OListInsert(OL2,k2,d2);
     OListInsert(OL2,k3,d3);
     viewOList(OL2);
+    List *nL = OListToList(OL2);
+    viewList(nL);
     freeOList(OL2,1,1);
     OList *OL3 = newOList(compareInt,viewInt,viewInt,freeInt,freeInt);
     OListInsert(OL3,k3,d3);
     viewOList(OL2);
+
 }
