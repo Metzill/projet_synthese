@@ -15,13 +15,29 @@
  * Renvoie le nouveau nœud créé.
  */
 static BSTNode* newBSTNode(void* key, void* data) {
-	/* A FAIRE */
+	BSTNode *new = (BSTNode  *) malloc(1 * sizeof(BSTNode));
+	new->key=key;
+	new->data=data;
+	new->bfactor=0;
+	new->left=NULL;
+	new->right=NULL;
+
+	return new;
 }
 
 BSTree * newBSTree(int (*preceed)(const void*, const void*),
 					void (*viewKey)(const void*), void (*viewData)(const void*),
 					void (*freeKey)(void*), void (*freeData)(void*)) {
-	/* A FAIRE */
+	BSTree *new = (BSTree  *) malloc(1 * sizeof(BSTree));
+	new->root=NULL;
+	new->numelm=0;
+	new->balanced=0;
+	new->preceed=preceed;
+	new->viewKey=viewKey;
+	new->freeKey=freeKey;
+	new->viewData=viewData;
+	new->freeData=freeData;
+
 }
 
 /**
@@ -33,13 +49,25 @@ BSTree * newBSTree(int (*preceed)(const void*, const void*),
  */
 static BSTNode* insertBSTNode(BSTNode* curr, void* key, void* data, int (*preceed)(const void*, const void*)) {
 	/* A FAIRE */
+	if(curr==NULL)
+		return newBSTNode(key,data);
+	if(preceed(key,curr->viewKey)){
+		curr->left=insertBSTNode(curr->left,key,data,preceed);
+		return curr;
+	}else
+		curr->right=insertBSTNode(curr->right,key,data,preceed);
+		return curr;
+ }
+
 }
 
 /**
  * NB : Utiliser la fonction récursive insertBSTNode.
  */
 void BSTreeInsert(BSTree* T, void* key, void* data) {
-	/* A FAIRE */
+
+	insertBSTNode(T->root,key,data,T->preceed);
+
 }
 
 /*********************************************************************

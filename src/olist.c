@@ -96,7 +96,6 @@ void OListInsert(OList * L, void * key, void * data) {
 }
 
 List* OListToList(const OList* L) {
-	/* A FAIRE */
 	assert(L!=NULL);
 	List *nL = newList(L->viewData,L->freeData);
     OLNode *Tete = L->head;
