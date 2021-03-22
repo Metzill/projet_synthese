@@ -158,7 +158,16 @@ void EBSTreeInsert(BSTree* T, void* key, void* data) {
  * NB : procédure récursive.
  */
 static void freeBSTNode(BSTNode* curr, void (*freeKey)(void*), void (*freeData)(void*)) {
-	/* A FAIRE */
+	if(curr!=NULL){
+		freeBSTNode(curr->left,freeKey,freeData);
+		freeBSTNode(curr->right,freeKey,freeData);
+		if(freeKey!=NULL)
+			freeKey(curr->key);
+		if(freeData!=NULL)
+		 freeData(curr->data);
+		free(curr);
+}
+
 }
 
 /**
@@ -169,7 +178,14 @@ static void freeBSTNode(BSTNode* curr, void (*freeKey)(void*), void (*freeData)(
 void freeBSTree(BSTree* T, int deleteKey, int deleteData) {
 	assert(deleteKey == 0 || deleteKey == 1);
 	assert(deleteData == 0 || deleteData == 1);
-	/* A FAIRE */
+
+	if(deleteKey==1)
+		void (*freeKey)(void*)=T->freeKey;
+	if(deleteData==1)
+		void (*freeData)(void*)=T->freeData;
+
+	freeBSTNode(T->root,T->freeKey,T->freeData);
+	free(T);
 }
 
 /**
@@ -179,14 +195,19 @@ void freeBSTree(BSTree* T, int deleteKey, int deleteData) {
  * NB : procédure récursive.
  */
 static void inorderView(BSTNode *curr, void (*viewKey)(const void*), void (*viewData)(const void*)) {
-	/* A FAIRE */
+	if (curr!=NULL){
+	 viewData(curr->data);
+	 viewKey(curr->key);
+	 inorderView(curr->left,viewkey,viewData);
+	 inorderView(curr->right,viewkey,viewData);
+	}
 }
 
 /**
  * NB : Utiliser la procédure récursive inorderView.
  */
 void viewBSTree(const BSTree* T) {
-	/* A FAIRE */
+	inorderView(T->root,T->viewKey,T->viewData);
 }
 
 /**
@@ -198,24 +219,52 @@ void viewBSTree(const BSTree* T) {
  * NB : procédure récursive.
  */
 static void treetolist(BSTNode* curr, List* list) {
-	/* A FAIRE */
+
+	if (curr!=NULL){
+	 listInsertLast(list,curr);
+	 treetolist(curr->left,list);
+	 treetolist(curr->right,list);
+	}
+
 }
 
 /**
  * NB : Utiliser la procédure récursive treetolist.
  */
 List* BSTreeToList(const BSTree* T) {
-	/* A FAIRE */
+	List* list=newList(T->viewData,t->freeData);
+	return treetolist(T->root,list);
 }
 
 BSTNode* BSTMin(BSTNode* node) {
 	assert(node != NULL);
-	/* A FAIRE */
+
+	BSTNode* tempoG=BSTMin(noded->left);
+	BSTNode* tempoD=BSTMin(noded->right);
+	BSTNode* petit=node;
+
+	if(petit->key>tempoG->key)
+		petit=tempoG;
+	if(petit->key>tempoD->key)
+		petit=tempoD;
+
+	return petit;
+
 }
 
 BSTNode* BSTMax(BSTNode* node) {
 	assert(node != NULL);
-	/* A FAIRE */
+
+	BSTNode* tempoG=BSTMin(noded->left);
+	BSTNode* tempoD=BSTMin(noded->right);
+	BSTNode* grand=node;
+
+	if(grand->key<tempoG->key)
+		grand=tempoG;
+	if(grand->key<tempoD->key)
+		grand=tempoD;
+
+	return grand;
 }
 
 /**
@@ -227,7 +276,20 @@ BSTNode* BSTMax(BSTNode* node) {
  */
 static BSTNode* predecessor(BSTNode* curr, void* key, int (*preceed)(const void*, const void*)) {
 	assert(curr != NULL);
-	/* A FAIRE */
+
+	BSTNode* tempoG=predecessor(curr->left,key,preceed);
+	BSTNode* tempoD=predecessor(curr->right,key,preceed);
+
+	if(preceed(curr->key,key)==1)
+		return curr;
+	else if (tempoG!=NULL)
+		return tempoG;
+	else if (tempoD!=NULL)
+		return tempoD;
+	else
+		return NULL;
+
+
 }
 
 /**
@@ -236,7 +298,8 @@ static BSTNode* predecessor(BSTNode* curr, void* key, int (*preceed)(const void*
 BSTNode * findPredecessor(const BSTree * T, const BSTNode* node) {
 	assert(T->root != NULL);
 	assert(node != NULL);
-	/* A FAIRE */
+
+	return predecessor(T->root,node->key,T->preceed);
 }
 
 /**
@@ -249,6 +312,17 @@ BSTNode * findPredecessor(const BSTree * T, const BSTNode* node) {
 static BSTNode* successor(BSTNode* curr, void* key, int (*preceed)(const void*, const void*)) {
 	assert(curr != NULL);
 	/* A FAIRE */
+	BSTNode* tempoG=successor(curr->left,key,preceed);
+	BSTNode* tempoD=successor(curr->right,key,preceed);
+
+	if(preceed(curr->key,key)==0)
+		return curr;
+	else if (tempoG!=NULL)
+		return tempoG;
+	else if (tempoD!=NULL)
+		return tempoD;
+	else
+		return NULL;
 }
 
 /**
@@ -257,5 +331,6 @@ static BSTNode* successor(BSTNode* curr, void* key, int (*preceed)(const void*, 
 BSTNode * findSuccessor(const BSTree * T, const BSTNode* node) {
 	assert(T->root != NULL);
 	assert(node != NULL);
-	/* A FAIRE */
+	
+	return successor(T->root,node->key,T->preceed);
 }
