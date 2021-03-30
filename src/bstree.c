@@ -38,6 +38,7 @@ BSTree * newBSTree(int (*preceed)(const void*, const void*),
 	new->viewData=viewData;
 	new->freeData=freeData;
 
+	return new;
 }
 
 /**
@@ -48,7 +49,6 @@ BSTree * newBSTree(int (*preceed)(const void*, const void*),
  * NB : fonction récursive.
  */
 static BSTNode* insertBSTNode(BSTNode* curr, void* key, void* data, int (*preceed)(const void*, const void*)) {
-	/* A FAIRE */
 	if(curr==NULL)
 		return newBSTNode(key,data);
 	if(preceed(key,curr->viewKey)){
@@ -81,13 +81,30 @@ void BSTreeInsert(BSTree* T, void* key, void* data) {
  * N'oubliez pas à initialiser le facteur d'équilibre.
  */
 static BSTNode* newEBSTNode(void* key, void* data) {
-	/* A FAIRE */
+	BSTNode *new = (BSTNode  *) malloc(1 * sizeof(BSTNode));
+	new->key=key;
+	new->data=data;
+	new->bfactor=0;
+	new->left=NULL;
+	new->right=NULL;
+	return new;
 }
 
 BSTree * newEBSTree(int (*preceed)(const void*, const void*),
 					void (*viewKey)(const void*), void (*viewData)(const void*),
 					void (*freeKey)(void*), void (*freeData)(void*)) {
-	/* A FAIRE */
+
+	BSTree *new = (BSTree  *) malloc(1 * sizeof(BSTree));
+	new->root=NULL;
+	new->numelm=0;
+	new->balanced=1;
+	new->preceed=preceed;
+	new->viewKey=viewKey;
+	new->viewData=viewData;
+	new->freeKey=freeKey;
+	new->freeData=freeData;
+
+	return new;
 }
 
 /**
@@ -99,12 +116,53 @@ BSTree * newEBSTree(int (*preceed)(const void*, const void*),
  * (+) bfactor(y)=-1 et bfactor(y->right)=1
  * (+) bfactor(y)=-1 et bfactor(y->right)=-1
  * (+) bfactor(y)=-1 et bfactor(y->right)=0
+ * (+) bfactor(y)=-2 et bfactor(y->right)=-2
  * Assurez vous que le nœud y ainsi que son fils droit existent.
  */
 static BSTNode* rotateLeft(BSTNode* y) {
 	assert(y);
 	assert(y->right);
 	/* A FAIRE */
+
+	int by=y->bfactor;
+	int byright=y->right->bfactor;
+	if(by==-2 && byright==-1){
+		BSTNode* rleft=y->right->left;
+		y->right->left=y;
+		y->right->bfactor=0;
+		y->right=rleft;
+		y->bfactor=0;
+	}
+	else if(by==-1 && byright==1){
+	  rotateRight(y->right);
+		BSTNode* rleft=y->right->left;
+		y->right->left=y;
+		y->right->bfactor=1;
+		y->right=rleft;
+		y->bfactor=1;
+	}
+	else if(by==-1 && byright==-1){
+		BSTNode* rleft=y->right->left;
+		y->right->left=y;
+		y->right->bfactor=1;
+		y->right=rleft;
+		y->bfactor=1;
+	}
+	else if(by==-1 && byright==0){
+		rotateRight(y->right);
+		BSTNode* rleft=y->right->left;
+		y->right->left=y;
+		y->right->bfactor=0;
+		y->right=rleft;
+		y->bfactor=0;
+	}else if(by==-2 && byright==-2){
+		BSTNode* rleft=y->right->left;
+		y->right->left=y;
+		y->right->bfactor=0;
+		y->right=rleft;
+		y->bfactor=1;
+	}
+
 }
 
 /**
@@ -116,12 +174,51 @@ static BSTNode* rotateLeft(BSTNode* y) {
  * (+) bfactor(x)=1 et bfactor(x->left)=1
  * (+) bfactor(x)=1 et bfactor(x->left)=-1
  * (+) bfactor(x)=1 et bfactor(x->left)=0
+ * (+) bfactor(x)=2 et bfactor(x->right)=2
  * Assurez vous que le nœud x ainsi que son fils gauche existent.
  */
 static BSTNode* rotateRight(BSTNode* x) {
 	assert(x);
 	assert(x->left);
 	/* A FAIRE */
+	int bx=x->bfactor;
+	int bxright=x->left->bfactor;
+	if(by==2 && byright==1){
+		BSTNode* lright=y->left->right;
+		y->left->right=y;
+		y->left->bfactor=0;
+		y->left=lright;
+		y->bfactor=0;
+	}
+	else if(by==1 && byright==1){
+		BSTNode* lright=y->left->right;
+		y->left->right=y;
+		y->left->bfactor=-1;
+		y->left=lright;
+		y->bfactor=-1;
+	}
+	else if(by==1 && byright==-1){
+		rotateLeft(y->left);
+		BSTNode* lright=y->left->right;
+		y->left->right=y;
+		y->left->bfactor=-1;
+		y->left=lright;
+		y->bfactor=-1;
+	}
+	else if(by==1 && byright==0){
+		rotateLeft(y->left);
+		BSTNode* lright=y->left->right;
+		y->left->right=y;
+		y->left->bfactor=0;
+		y->left=lright;
+		y->bfactor=0;
+	}else if(by==2 && byright==2){
+		BSTNode* lright=y->left->right;
+		y->left->right=y;
+		y->left->bfactor=0;
+		y->left=lright;
+		y->bfactor=0;
+	}
 }
 
 /**
@@ -134,14 +231,28 @@ static BSTNode* rotateRight(BSTNode* x) {
  * NB : fonction récursive.
  */
 static BSTNode* insertEBSTNode(BSTNode* curr, void* key, void* data, int (*preceed)(const void*, const void*)) {
-	/* A FAIRE */
+	if(curr==NULL)
+		return newBSTNode(key,data);
+	if(preceed(key,curr->viewKey)){
+		curr->bfactor+=1;
+		curr->left=insertBSTNode(curr->left,key,data,preceed);
+		if(curr->bfactor>1)
+			rotateRight(curr);
+		return curr;
+	}else{
+		curr->bfactor-=1;
+		curr->right=insertBSTNode(curr->right,key,data,preceed);
+		if(curr->bfactor<-1)
+			rotateLeft(curr);
+		return curr;
+ }
 }
 
 /**
  * NB : Utiliser la fonction récursive insertEBSTNode.
  */
 void EBSTreeInsert(BSTree* T, void* key, void* data) {
-	/* A FAIRE */
+		insertEBSTNode(T->root,key,data,T->preceed);
 }
 
 /*********************************************************************
@@ -331,6 +442,6 @@ static BSTNode* successor(BSTNode* curr, void* key, int (*preceed)(const void*, 
 BSTNode * findSuccessor(const BSTree * T, const BSTNode* node) {
 	assert(T->root != NULL);
 	assert(node != NULL);
-	
-	return successor(T->root,node->key,T->preceed);
+
+	return predecessor(T->root,node->key,T->preceed);
 }
