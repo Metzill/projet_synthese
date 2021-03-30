@@ -16,15 +16,30 @@ Task * newTask(char* id, int proctime, int reltime, int deadline, int weight) {
 	assert(proctime > 0);
 	assert(reltime >= 0);
 	assert((deadline >= reltime + proctime));
-	/* A FAIRE */
+	assert(strcmp(id,""));
+	Task *new = (Task *) malloc(1 * sizeof(Task));
+    new->id=id;
+    new->processingTime=proctime;
+    new->releaseTime=reltime;
+    new->deadline=deadline;
+    new->weight=weight;
+    return new;
 }
 
 void freeTask(void* task) {
-	/* A FAIRE */
+    assert(task!=NULL);
+	free(task);
 }
 
 void viewTask(const void *task) {
-	/* A FAIRE */
+    assert(task!=NULL);
+    const Task *tache = task;
+	printf("Tâche : %s \n",tache->id);
+    printf("Durée : %d \n",tache->processingTime);
+    printf("Date de libération : %d \n",tache->releaseTime);
+    printf("Date limite : %d \n",tache->deadline);
+    printf("Poids : %d \n",tache->weight);
+
 }
 
 /************************************************
@@ -32,15 +47,32 @@ void viewTask(const void *task) {
  ************************************************/
 
 Instance readInstance(char * filename) {
-	/* A FAIRE */
+    Instance newInstance = newList(viewTask,freeTask);
+    int lineLength = 13;
+	char line[lineLength];
+	char idS[10];
+	int processingTime, releaseTime, deadline, weight;
+	FILE *fp;
+    if((fp = fopen("filename", "rt")) == NULL) {
+        fprintf(stderr, "Error while opening %s\n", "data/town.txt");
+        exit(EXIT_FAILURE);
+    }
+    while(fgets(line,lineLength,fp) != NULL){
+        sscanf(line, "%s %d %d %d %d", idS, &processingTime, &releaseTime, &deadline, &weight);
+        Task *taskn = newTask(idS,processingTime,releaseTime,deadline,weight);
+        listInsertFirst(newInstance,taskn);
+    }
+    return newInstance;
+
 }
 
 void viewInstance(Instance I) {
-	/* A FAIRE */
+	assert(I!=NULL);
+	viewList(I);
 }
 
 void freeInstance(Instance I, int deleteData) {
-	/* A FAIRE */
+	freeList(I, deleteData);
 }
 
 /*****************************************************************************
