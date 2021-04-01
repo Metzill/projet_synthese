@@ -4,7 +4,8 @@
 #include "utilities.h"
 #include "list.h"
 #include "bstree.h"
-
+static BSTNode* rotateLeft(BSTNode* y);
+static BSTNode* rotateRight(BSTNode* x);
 /*********************************************************************
  * Arbre Binaire de Recherche (non-équilibré).
  *********************************************************************/
@@ -51,10 +52,10 @@ BSTree * newBSTree(int (*preceed)(const void*, const void*),
 static BSTNode* insertBSTNode(BSTNode* curr, void* key, void* data, int (*preceed)(const void*, const void*)) {
 	if(curr==NULL)
 		return newBSTNode(key,data);
-	if(preceed(key,curr->viewKey)){
+	if(preceed(key,curr->key)){
 		curr->left=insertBSTNode(curr->left,key,data,preceed);
 		return curr;
-	}else
+	}else{
 		curr->right=insertBSTNode(curr->right,key,data,preceed);
 		return curr;
  }
@@ -183,41 +184,41 @@ static BSTNode* rotateRight(BSTNode* x) {
 	/* A FAIRE */
 	int bx=x->bfactor;
 	int bxright=x->left->bfactor;
-	if(by==2 && byright==1){
-		BSTNode* lright=y->left->right;
-		y->left->right=y;
-		y->left->bfactor=0;
-		y->left=lright;
-		y->bfactor=0;
+	if(bx==2 && bxright==1){
+		BSTNode* lright=x->left->right;
+        x->left->right=x;
+        x->left->bfactor=0;
+        x->left=lright;
+        x->bfactor=0;
 	}
-	else if(by==1 && byright==1){
-		BSTNode* lright=y->left->right;
-		y->left->right=y;
-		y->left->bfactor=-1;
-		y->left=lright;
-		y->bfactor=-1;
+	else if(bx==1 && bxright==1){
+		BSTNode* lright=x->left->right;
+        x->left->right=x;
+        x->left->bfactor=-1;
+        x->left=lright;
+        x->bfactor=-1;
 	}
-	else if(by==1 && byright==-1){
-		rotateLeft(y->left);
-		BSTNode* lright=y->left->right;
-		y->left->right=y;
-		y->left->bfactor=-1;
-		y->left=lright;
-		y->bfactor=-1;
+	else if(bx==1 && bxright==-1){
+		rotateLeft(x->left);
+		BSTNode* lright=x->left->right;
+        x->left->right=x;
+        x->left->bfactor=-1;
+        x->left=lright;
+        x->bfactor=-1;
 	}
-	else if(by==1 && byright==0){
-		rotateLeft(y->left);
-		BSTNode* lright=y->left->right;
-		y->left->right=y;
-		y->left->bfactor=0;
-		y->left=lright;
-		y->bfactor=0;
-	}else if(by==2 && byright==2){
-		BSTNode* lright=y->left->right;
-		y->left->right=y;
-		y->left->bfactor=0;
-		y->left=lright;
-		y->bfactor=0;
+	else if(bx==1 && bxright==0){
+		rotateLeft(x->left);
+		BSTNode* lright=x->left->right;
+        x->left->right=x;
+        x->left->bfactor=0;
+        x->left=lright;
+        x->bfactor=0;
+	}else if(bx==2 && bxright==2){
+		BSTNode* lright=x->left->right;
+        x->left->right=x;
+        x->left->bfactor=0;
+        x->left=lright;
+        x->bfactor=0;
 	}
 }
 
@@ -233,7 +234,7 @@ static BSTNode* rotateRight(BSTNode* x) {
 static BSTNode* insertEBSTNode(BSTNode* curr, void* key, void* data, int (*preceed)(const void*, const void*)) {
 	if(curr==NULL)
 		return newBSTNode(key,data);
-	if(preceed(key,curr->viewKey)){
+	if(preceed(key,curr->key)){
 		curr->bfactor+=1;
 		curr->left=insertBSTNode(curr->left,key,data,preceed);
 		if(curr->bfactor>1)
@@ -290,10 +291,11 @@ void freeBSTree(BSTree* T, int deleteKey, int deleteData) {
 	assert(deleteKey == 0 || deleteKey == 1);
 	assert(deleteData == 0 || deleteData == 1);
 
-	if(deleteKey==1)
-		void (*freeKey)(void*)=T->freeKey;
-	if(deleteData==1)
-		void (*freeData)(void*)=T->freeData;
+	if(deleteKey==0)
+        T->freeKey=NULL;
+
+	if(deleteData==0)
+        T->freeData=NULL;
 
 	freeBSTNode(T->root,T->freeKey,T->freeData);
 	free(T);
@@ -309,8 +311,8 @@ static void inorderView(BSTNode *curr, void (*viewKey)(const void*), void (*view
 	if (curr!=NULL){
 	 viewData(curr->data);
 	 viewKey(curr->key);
-	 inorderView(curr->left,viewkey,viewData);
-	 inorderView(curr->right,viewkey,viewData);
+	 inorderView(curr->left,viewKey,viewData);
+	 inorderView(curr->right,viewKey,viewData);
 	}
 }
 
@@ -343,15 +345,15 @@ static void treetolist(BSTNode* curr, List* list) {
  * NB : Utiliser la procédure récursive treetolist.
  */
 List* BSTreeToList(const BSTree* T) {
-	List* list=newList(T->viewData,t->freeData);
+	List* list=newList(T->viewData,T->freeData);
 	return treetolist(T->root,list);
 }
 
 BSTNode* BSTMin(BSTNode* node) {
 	assert(node != NULL);
 
-	BSTNode* tempoG=BSTMin(noded->left);
-	BSTNode* tempoD=BSTMin(noded->right);
+	BSTNode* tempoG=BSTMin(node->left);
+	BSTNode* tempoD=BSTMin(node->right);
 	BSTNode* petit=node;
 
 	if(petit->key>tempoG->key)
@@ -366,8 +368,8 @@ BSTNode* BSTMin(BSTNode* node) {
 BSTNode* BSTMax(BSTNode* node) {
 	assert(node != NULL);
 
-	BSTNode* tempoG=BSTMin(noded->left);
-	BSTNode* tempoD=BSTMin(noded->right);
+	BSTNode* tempoG=BSTMin(node->left);
+	BSTNode* tempoD=BSTMin(node->right);
 	BSTNode* grand=node;
 
 	if(grand->key<tempoG->key)
