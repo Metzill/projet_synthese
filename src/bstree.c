@@ -342,12 +342,12 @@ void viewBSTree(const BSTree* T) {
  * La liste va contenir les éléments de l'arbre dans l'ordre infixe.
  * NB : procédure récursive.
  */
-static void treetolist(BSTNode* curr, List* list) {
+static void BSTreetolist(BSTNode* curr, List* list) {
 
 	if (curr!=NULL){
 	 listInsertLast(list,curr);
-	 treetolist(curr->left,list);
-	 treetolist(curr->right,list);
+	 BSTreetolist(curr->left,list);
+	 BSTreetolist(curr->right,list);
 	}
 
 }
@@ -357,7 +357,7 @@ static void treetolist(BSTNode* curr, List* list) {
  */
 List* BSTreeToList(const BSTree* T) {
 	List* list=newList(T->viewData,T->freeData);
-	treetolist(T->root,list);
+    BSTreetolist(T->root,list);
 	return list;
 }
 

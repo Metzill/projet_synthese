@@ -169,5 +169,47 @@ static int fcfs(const void* a, const void* b) {
 }
 
 void reorderInstance(Instance I,  DataStructure structtype, Order order) {
-	/* A FAIRE */
+	OList *ol;
+	BSTree *bst;
+
+	switch(structtype){
+	    case OL:  switch (order) {
+                case SPT: ol = newOList(*spt,I->viewData,I->viewData,I->freeData, I->freeData);break;
+                case LPT: ol = newOList(*lpt,I->viewData,I->viewData,I->freeData, I->freeData);break;
+                case WSPT: ol = newOList(*wspt,I->viewData,I->viewData,I->freeData, I->freeData);break;
+                case FCFS: ol = newOList(*fcfs,I->viewData,I->viewData,I->freeData, I->freeData);break;
+            }
+            while(I!=NULL){
+                Task* task = (Task*) I->head->data;
+                OListInsert(ol,task,task);
+                I->head = I->head->succ;
+            }
+            I=OListToList(ol);break;
+	    case BST: switch (order) {
+                case SPT: bst = newBSTree(*spt,I->viewData,I->viewData,I->freeData, I->freeData);break;
+                case LPT: bst = newBSTree(*lpt,I->viewData,I->viewData,I->freeData, I->freeData);break;
+                case WSPT: bst = newBSTree(*wspt,I->viewData,I->viewData,I->freeData, I->freeData);break;
+                case FCFS: bst = newBSTree(*fcfs,I->viewData,I->viewData,I->freeData, I->freeData);break;
+            }
+            while(I!=NULL){
+                Task* task = (Task*) I->head->data;
+                BSTreeInsert(bst,task,task);
+                I->head = I->head->succ;
+            }
+            I=BSTreeToList(bst);break;
+	    case EBST: switch (order) {
+                case SPT: bst = newEBSTree(*spt,I->viewData,I->viewData,I->freeData, I->freeData);break;
+                case LPT: bst = newBSTree(*lpt,I->viewData,I->viewData,I->freeData, I->freeData);break;
+                case WSPT: bst = newBSTree(*wspt,I->viewData,I->viewData,I->freeData, I->freeData);break;
+                case FCFS: bst = newBSTree(*fcfs,I->viewData,I->viewData,I->freeData, I->freeData);break;
+            }
+            while(I!=NULL){
+                Task* task = (Task*) I->head->data;
+                EBSTreeInsert(bst,task,task);
+                I->head = I->head->succ;
+            }
+            I=BSTreeToList(bst);break;
+	    default: break;
+	}
+
 }
