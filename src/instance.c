@@ -28,12 +28,14 @@ Task * newTask(char* id, int proctime, int reltime, int deadline, int weight) {
 
 void freeTask(void* task) {
     assert(task!=NULL);
-	free(task);
+    Task *tache = (Task*) task;
+    free(tache->id);
+    free(task);
 }
 
 void viewTask(const void *task) {
     assert(task!=NULL);
-    const Task *tache = task;
+    const Task *tache = (Task*) task;
 	printf("Tâche : %s \n",tache->id);
     printf("Durée : %d \n",tache->processingTime);
     printf("Date de libération : %d \n",tache->releaseTime);
@@ -89,7 +91,14 @@ void freeInstance(Instance I, int deleteData) {
  * (+) durée de a = durée de b ET date de libération de a < date de libération de b
  */
 static int spt(const void* a, const void* b) {
-	/* A FAIRE */
+    Task *ta = (Task*) a;
+    Task *tb = (Task*) b;
+    if ( (ta->processingTime < tb->processingTime)
+    || ((ta->processingTime == tb->processingTime) && (ta->releaseTime < tb->releaseTime)) ){
+        return 1;
+    } else{
+        return 0;
+    }
 }
 
 /**
@@ -102,7 +111,14 @@ static int spt(const void* a, const void* b) {
  * (+) durée de a = durée de b ET date de libération de a < date de libération de b
  */
 static int lpt(const void* a, const void* b) {
-	/* A FAIRE */
+    Task *ta = (Task*) a;
+    Task *tb = (Task*) b;
+    if ( (ta->processingTime > tb->processingTime)
+         || ((ta->processingTime == tb->processingTime) && (ta->releaseTime < tb->releaseTime)) ){
+        return 1;
+    } else{
+        return 0;
+    }
 }
 
 /**
@@ -119,7 +135,15 @@ static int lpt(const void* a, const void* b) {
  *     ET date de libération de a < date de libération de b
  */
 static int wspt(const void* a, const void* b) {
-	/* A FAIRE */
+    Task *ta = (Task*) a;
+    Task *tb = (Task*) b;
+    int awd = ta->weight / ta->processingTime, bwd = tb->weight / tb->processingTime;
+    if ( (awd > bwd) || ((awd == bwd) && (ta->processingTime > tb->processingTime))
+         || ((awd == bwd) && (ta->processingTime == tb->processingTime) && (ta->releaseTime < tb->releaseTime)) ){
+        return 1;
+    } else{
+        return 0;
+    }
 }
 
 /**
@@ -133,7 +157,15 @@ static int wspt(const void* a, const void* b) {
  *     ET durée de a > durée de b
  */
 static int fcfs(const void* a, const void* b) {
-	/* A FAIRE */
+    Task *ta = (Task*) a;
+    Task *tb = (Task*) b;
+
+    if ((ta->releaseTime < tb->releaseTime)
+    || (ta->releaseTime == tb->releaseTime) && (ta->processingTime > tb->processingTime) ) {
+        return 1;
+    } else {
+        return 0;
+    }
 }
 
 void reorderInstance(Instance I,  DataStructure structtype, Order order) {

@@ -75,9 +75,11 @@ void fonctionTest(){
 
 	listRemoveLast(fils);
 	viewList(fils);
-		printf("\n");
+	printf("\n");
 
-
+	free(p);
+	free(m);
+	free(o);
 }
 
 void listInsertFirst(List * L, void * data) {
