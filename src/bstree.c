@@ -123,45 +123,30 @@ BSTree * newEBSTree(int (*preceed)(const void*, const void*),
 static BSTNode* rotateLeft(BSTNode* y) {
 	assert(y);
 	assert(y->right);
-	/* A FAIRE */
-
+	BSTNode* x=y->right;
+	y->right=x->left;
+	x->left=y;
 	int by=y->bfactor;
-	int byright=y->right->bfactor;
+	int byright=x->bfactor;
+
 	if(by==-2 && byright==-1){
-		BSTNode* rleft=y->right->left;
-		y->right->left=y;
-		y->right->bfactor=0;
-		y->right=rleft;
 		y->bfactor=0;
+		x->bfactor=0;
 	}
 	else if(by==-1 && byright==1){
-	  rotateRight(y->right);
-		BSTNode* rleft=y->right->left;
-		y->right->left=y;
-		y->right->bfactor=1;
-		y->right=rleft;
-		y->bfactor=1;
+		y->bfactor=0;
+		x->bfactor=2;
 	}
 	else if(by==-1 && byright==-1){
-		BSTNode* rleft=y->right->left;
-		y->right->left=y;
-		y->right->bfactor=1;
-		y->right=rleft;
 		y->bfactor=1;
+		x->bfactor=1;
 	}
 	else if(by==-1 && byright==0){
-		rotateRight(y->right);
-		BSTNode* rleft=y->right->left;
-		y->right->left=y;
-		y->right->bfactor=0;
-		y->right=rleft;
 		y->bfactor=0;
+		x->bfactor=1;
 	}else if(by==-2 && byright==-2){
-		BSTNode* rleft=y->right->left;
-		y->right->left=y;
-		y->right->bfactor=0;
-		y->right=rleft;
 		y->bfactor=1;
+		x->bfactor=0;
 	}
 
 }
@@ -178,47 +163,33 @@ static BSTNode* rotateLeft(BSTNode* y) {
  * (+) bfactor(x)=2 et bfactor(x->right)=2
  * Assurez vous que le nœud x ainsi que son fils gauche existent.
  */
-static BSTNode* rotateRight(BSTNode* x) {
-	assert(x);
-	assert(x->left);
+static BSTNode* rotateRight(BSTNode* y) {
+	assert(y);
+	assert(y->left);
 	/* A FAIRE */
-	int bx=x->bfactor;
-	int bxright=x->left->bfactor;
-	if(bx==2 && bxright==1){
-		BSTNode* lright=x->left->right;
-        x->left->right=x;
-        x->left->bfactor=0;
-        x->left=lright;
-        x->bfactor=0;
+	BSTNode* x=y->left;
+	y->left=x->right;
+	x->right=y;
+	int by=y->bfactor;
+	int byleft=x->bfactor;
+	if(by==2 && byleft==1){
+		y->bfactor=0;
+		x->bfactor=0;
 	}
-	else if(bx==1 && bxright==1){
-		BSTNode* lright=x->left->right;
-        x->left->right=x;
-        x->left->bfactor=-1;
-        x->left=lright;
-        x->bfactor=-1;
+	else if(by==1 && byleft==1){
+		y->bfactor=-1;
+		x->bfactor=-1;
 	}
-	else if(bx==1 && bxright==-1){
-		rotateLeft(x->left);
-		BSTNode* lright=x->left->right;
-        x->left->right=x;
-        x->left->bfactor=-1;
-        x->left=lright;
-        x->bfactor=-1;
+	else if(by==1 && byleft==-1){
+		y->bfactor=0;
+		x->bfactor=-2;
 	}
-	else if(bx==1 && bxright==0){
-		rotateLeft(x->left);
-		BSTNode* lright=x->left->right;
-        x->left->right=x;
-        x->left->bfactor=0;
-        x->left=lright;
-        x->bfactor=0;
-	}else if(bx==2 && bxright==2){
-		BSTNode* lright=x->left->right;
-        x->left->right=x;
-        x->left->bfactor=0;
-        x->left=lright;
-        x->bfactor=0;
+	else if(by==1 && byleft==0){
+		y->bfactor=0;
+		x->bfactor=-1;
+	}else if(by==2 && byleft==2){
+		y->bfactor=-1;
+		x->bfactor=0;
 	}
 }
 
@@ -235,25 +206,65 @@ static BSTNode* insertEBSTNode(BSTNode* curr, void* key, void* data, int (*prece
 	if(curr==NULL)
 		return newBSTNode(key,data);
 	if(preceed(key,curr->key)){
-		curr->bfactor+=1;
-		curr->left=insertBSTNode(curr->left,key,data,preceed);
-		if(curr->bfactor>1)
-			rotateRight(curr);
-		return curr;
-	}else{
-		curr->bfactor-=1;
-		curr->right=insertBSTNode(curr->right,key,data,preceed);
-		if(curr->bfactor<-1)
-			rotateLeft(curr);
-		return curr;
- }
+		//old bfactor Save
+		int oldBfLeft;
+		if(curr->left!=NULL)
+			 oldBfLeft=curr->left->bfactor;
+		else
+			oldBfLeft=0;
+
+		curr->left=insertEBSTNode(curr->left,key,data,preceed);
+		//test increment
+		if(oldBfLeft!=curr->left->bfactor && abs(curr->left->bfactor)==1)
+			curr->bfactor-=1;
+	}else if(!preceed(key,curr->key)){
+		//old bfactor Save
+		int oldBfRight;
+		if(curr->left!=NULL)
+			 oldBfRight=curr->left->bfactor;
+		else
+			oldBfRight=0;
+
+		curr->right=insertEBSTNode(curr->right,key,data,preceed);
+		//test increment
+		if(oldBfRight!=curr->left->bfactor && abs(curr->left->bfactor)==1)
+			curr->bfactor+=1;
+  }else{
+ 		error("On insère une deuxième fois cette clé");
+	}
+
+	int bfactor=curr->bfactor;
+ 	if (bfactor > 1 && preceed(key,curr->left->key))
+        return rotateRight(curr);
+
+
+  // Right Right Case
+  if (bfactor < -1 && !preceed(key,curr->right->key))
+      return rotateLeft(curr);
+
+  // Left Right Case
+  if (bfactor > 1 && !preceed(key,curr->left->key))
+  {
+      curr->left =  rotateLeft(curr->left);
+      return rotateRight(curr);
+  }
+
+  // Right Left Case
+  if (bfactor < -1 && preceed(key,curr->right->key))
+  {
+      curr->right = rotateRight(curr->right);
+      return rotateLeft(curr);
+  }
+
+	return curr;
 }
 
 /**
  * NB : Utiliser la fonction récursive insertEBSTNode.
  */
 void EBSTreeInsert(BSTree* T, void* key, void* data) {
-		insertEBSTNode(T->root,key,data,T->preceed);
+		T->root=insertEBSTNode(T->root,key,data,T->preceed);
+		T->numelm++;
 }
 
 /*********************************************************************
@@ -346,7 +357,8 @@ static void treetolist(BSTNode* curr, List* list) {
  */
 List* BSTreeToList(const BSTree* T) {
 	List* list=newList(T->viewData,T->freeData);
-	return treetolist(T->root,list);
+	treetolist(T->root,list);
+	return list;
 }
 
 BSTNode* BSTMin(BSTNode* node) {
