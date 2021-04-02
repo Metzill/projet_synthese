@@ -327,7 +327,7 @@ static void inorderView(BSTNode *curr, void (*viewKey)(const void*), void (*view
 	 inorderView(curr->left,viewKey,viewData);
 	 inorderView(curr->right,viewKey,viewData);
 	 viewData(curr->data);
-	 //viewKey(curr->key);
+	 viewKey(curr->key);
 	}
 }
 
@@ -348,9 +348,9 @@ void viewBSTree(const BSTree* T) {
  */
 static void treetolist(BSTNode* curr, List* list) {
 	if (curr!=NULL){
-	 listInsertLast(list,curr->data);
 	 treetolist(curr->left,list);
 	 treetolist(curr->right,list);
+	 listInsertLast(list,curr->data);
 	}
 
 }
