@@ -14,7 +14,7 @@ int main(int argv, char *argc[]) {
 	 Instance I = readInstance("./data/exemple");
 	 viewInstance(I);
 	 fprintf(stdout,"Reorder :\n");
-	 reorderInstance(I, BST, LPT);
+	 reorderInstance(I, OL, LPT);
 	 printf("\n");
 	 viewInstance(I);
 	//
