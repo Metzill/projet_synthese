@@ -193,6 +193,12 @@ static BSTNode* rotateRight(BSTNode* y) {
 	}
 }
 
+int hauteur(BSTNode* curr){
+	if(curr==NULL)
+		return 0;
+	else
+		return max(hauteur(curr->left),hauteur(curr->right))+1;
+}
 /**
  * @brief
  * Insérer un nouveau nœud de clé key et donnée data
@@ -215,8 +221,6 @@ static BSTNode* insertEBSTNode(BSTNode* curr, void* key, void* data, int (*prece
 
 		curr->left=insertEBSTNode(curr->left,key,data,preceed);
 		//test increment
-		if(oldBfLeft!=curr->left->bfactor && abs(curr->left->bfactor)==1)
-			curr->bfactor-=1;
 	}else if(!preceed(key,curr->key)){
 		//old bfactor Save
 		int oldBfRight;
@@ -227,8 +231,6 @@ static BSTNode* insertEBSTNode(BSTNode* curr, void* key, void* data, int (*prece
 
 		curr->right=insertEBSTNode(curr->right,key,data,preceed);
 		//test increment
-		if(oldBfRight!=curr->left->bfactor && abs(curr->left->bfactor)==1)
-			curr->bfactor+=1;
   }else{
  		error("On insère une deuxième fois cette clé");
 	}
@@ -255,6 +257,8 @@ static BSTNode* insertEBSTNode(BSTNode* curr, void* key, void* data, int (*prece
       curr->right = rotateRight(curr->right);
       return rotateLeft(curr);
   }
+	
+	curr->bfactor=hauteur(curr->left)-hauteur(curr->right);
 
 	return curr;
 }

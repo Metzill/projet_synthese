@@ -217,12 +217,10 @@ void reorderInstance(Instance I, DataStructure structtype, Order order) {
                 BSTreeInsert(bst, node->data, node->data);
                 node = node->succ;
             }
-            viewBSTree(bst);
-            printf("\n");
-            I->head = BSTreeToList(bst)->head;
-            freeBSTree(bst, 0, 0);
-            break;
-        case EBST:
+            I->head=BSTreeToList(bst)->head;
+						freeBSTree(bst,0,0);
+						break;
+			case EBST:
 
             switch (order) {
                 case SPT:
