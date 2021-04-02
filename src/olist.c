@@ -100,7 +100,7 @@ List* OListToList(const OList* L) {
 	List *nL = newList(L->viewData,L->freeData);
     OLNode *Tete = L->head;
     while(Tete!=NULL){
-        listInsertLast(nL,Tete->data);
+        listInsertFirst(nL,Tete->data);
         Tete = Tete->succ;
 	}
     return nL;

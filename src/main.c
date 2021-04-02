@@ -15,7 +15,7 @@ int main(int argv, char *argc[]) {
 	 viewInstance(I);
 	 fprintf(stdout,"Reorder :\n");
 	 reorderInstance(I, BST, LPT);
-	 //viewInstance(I);
+	 viewInstance(I);
 	//
 	// Schedule *SOL = newSchedule(OL, 1);
 	// computeSchedule(SOL, I);

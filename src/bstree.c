@@ -323,7 +323,7 @@ static void inorderView(BSTNode *curr, void (*viewKey)(const void*), void (*view
 	 inorderView(curr->left,viewKey,viewData);
 	 inorderView(curr->right,viewKey,viewData);
 	 viewData(curr->data);
-	 viewKey(curr->key);
+	 //viewKey(curr->key);
 	}
 }
 
@@ -342,11 +342,11 @@ void viewBSTree(const BSTree* T) {
  * La liste va contenir les éléments de l'arbre dans l'ordre infixe.
  * NB : procédure récursive.
  */
-static void BSTreetolist(BSTNode* curr, List* list) {
+static void treetolist(BSTNode* curr, List* list) {
 	if (curr!=NULL){
 	 listInsertLast(list,curr->data);
-	 BSTreetolist(curr->left,list);
-	 BSTreetolist(curr->right,list);
+	 treetolist(curr->left,list);
+	 treetolist(curr->right,list);
 	}
 
 }
@@ -356,7 +356,7 @@ static void BSTreetolist(BSTNode* curr, List* list) {
  */
 List* BSTreeToList(const BSTree* T) {
 	List* list=newList(T->viewData,T->freeData);
-    BSTreetolist(T->root,list);
+    treetolist(T->root,list);
 	return list;
 }
 

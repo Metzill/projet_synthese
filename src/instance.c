@@ -65,7 +65,7 @@ Instance readInstance(char *filename) {
         sprintf(idS, "%d", id);
         //printf("%s\n",idS );
         Task *taskn = newTask(idS, processingTime, releaseTime, deadline, weight);
-        listInsertFirst(newInstance, taskn);
+        listInsertLast(newInstance, taskn);
     }
     return newInstance;
 
@@ -195,8 +195,8 @@ void reorderInstance(Instance I, DataStructure structtype, Order order) {
                 OListInsert(ol, node->data, node->data);
                 node = node->succ;
             }
-            I = OListToList(ol);
-            viewInstance(I);
+            I->head = OListToList(ol)->head;
+            freeOList(ol,0,0);
             break;
         case BST:
             switch (order) {
@@ -217,10 +217,12 @@ void reorderInstance(Instance I, DataStructure structtype, Order order) {
                 BSTreeInsert(bst, node->data, node->data);
                 node = node->succ;
             }
-            I=BSTreeToList(bst);
-						freeBSTree(bst,0,0);
-						break;
-			case EBST:
+            viewBSTree(bst);
+            printf("\n");
+            I->head = BSTreeToList(bst)->head;
+            freeBSTree(bst, 0, 0);
+            break;
+        case EBST:
 
             switch (order) {
                 case SPT:
@@ -240,8 +242,8 @@ void reorderInstance(Instance I, DataStructure structtype, Order order) {
                 EBSTreeInsert(bst, node->data, node->data);
                 node = node->succ;
             }
-            I=BSTreeToList(bst);
-			freeBSTree(bst,0,0);
+            I->head = BSTreeToList(bst)->head;
+            freeBSTree(bst, 0, 0);
             break;
         default:
             break;
