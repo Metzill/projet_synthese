@@ -187,6 +187,7 @@ void reorderInstance(Instance I,  DataStructure structtype, Order order) {
                 node=node->succ;
             }
             I=OListToList(ol);
+						freeOList(ol,0,0);
 						break;
 
 /////////////BST//////////////////
@@ -202,6 +203,7 @@ void reorderInstance(Instance I,  DataStructure structtype, Order order) {
                 node=node->succ;
             }
             I=BSTreeToList(bst);
+						freeBSTree(bst,0,0);
 						break;
 /////////////EBST//////////////////
 			case EBST:
@@ -218,6 +220,7 @@ void reorderInstance(Instance I,  DataStructure structtype, Order order) {
 							node=node->succ;
             }
              I=BSTreeToList(bst);
+						 freeBSTree(bst,0,0);
 			break;
 ////////DEFAULT////////////////
 	    default: break;
