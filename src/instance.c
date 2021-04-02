@@ -195,8 +195,8 @@ void reorderInstance(Instance I, DataStructure structtype, Order order) {
                 OListInsert(ol, node->data, node->data);
                 node = node->succ;
             }
-            I = OListToList(ol);
-            viewInstance(I);
+            I->head = OListToList(ol)->head;
+            freeOList(ol,0,0);
             break;
         case BST:
             switch (order) {
@@ -217,7 +217,7 @@ void reorderInstance(Instance I, DataStructure structtype, Order order) {
                 BSTreeInsert(bst, node->data, node->data);
                 node = node->succ;
             }
-            I=BSTreeToList(bst);
+            I->head=BSTreeToList(bst)->head;
 						freeBSTree(bst,0,0);
 						break;
 			case EBST:
@@ -237,11 +237,12 @@ void reorderInstance(Instance I, DataStructure structtype, Order order) {
                     break;
             }
             while (node != NULL) {
+                printf("j'insert un truc\n");
                 EBSTreeInsert(bst, node->data, node->data);
                 node = node->succ;
             }
-            I=BSTreeToList(bst);
-			freeBSTree(bst,0,0);
+            I->head=BSTreeToList(bst)->head;
+			      freeBSTree(bst,0,0);
             break;
         default:
             break;
