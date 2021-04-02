@@ -13,7 +13,7 @@
 int main(int argv, char *argc[]) {
 	 Instance I = readInstance("./data/exemple");
 	 viewInstance(I);
-	 reorderInstance(I, EBST, LPT);
+	 reorderInstance(I,BST,LPT);
 	 viewInstance(I);
 	//
 	// Schedule *SOL = newSchedule(OL, 1);

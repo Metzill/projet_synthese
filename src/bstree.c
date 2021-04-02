@@ -66,8 +66,8 @@ static BSTNode* insertBSTNode(BSTNode* curr, void* key, void* data, int (*precee
  * NB : Utiliser la fonction récursive insertBSTNode.
  */
 void BSTreeInsert(BSTree* T, void* key, void* data) {
-
-	insertBSTNode(T->root,key,data,T->preceed);
+	T->root=insertBSTNode(T->root,key,data,T->preceed);
+	T->numelm++;
 
 }
 
@@ -320,10 +320,10 @@ void freeBSTree(BSTree* T, int deleteKey, int deleteData) {
  */
 static void inorderView(BSTNode *curr, void (*viewKey)(const void*), void (*viewData)(const void*)) {
 	if (curr!=NULL){
-	 viewData(curr->data);
-	 viewKey(curr->key);
 	 inorderView(curr->left,viewKey,viewData);
 	 inorderView(curr->right,viewKey,viewData);
+	 viewData(curr->data);
+	 viewKey(curr->key);
 	}
 }
 
@@ -343,9 +343,8 @@ void viewBSTree(const BSTree* T) {
  * NB : procédure récursive.
  */
 static void BSTreetolist(BSTNode* curr, List* list) {
-
 	if (curr!=NULL){
-	 listInsertLast(list,curr);
+	 listInsertLast(list,curr->data);
 	 BSTreetolist(curr->left,list);
 	 BSTreetolist(curr->right,list);
 	}

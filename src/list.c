@@ -99,7 +99,6 @@ void listInsertFirst(List * L, void * data) {
 void listInsertLast(List * L, void * data) {
 	LNode *last=newLNode(data);
 	last->pred=L->tail;
-
 	if(L->tail!=NULL)
 		L->tail->succ=last;
 	L->tail=last;

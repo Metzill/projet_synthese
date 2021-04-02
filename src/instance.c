@@ -7,7 +7,6 @@
 #include "olist.h"
 #include "bstree.h"
 #include "instance.h"
-
 /***********************************************
  * TASK
  ***********************************************/
@@ -18,12 +17,13 @@ Task * newTask(char* id, int proctime, int reltime, int deadline, int weight) {
 	assert((deadline >= reltime + proctime));
 	assert(strcmp(id,""));
 	Task *new = (Task *) malloc(1 * sizeof(Task));
-    new->id=id;
-    new->processingTime=proctime;
-    new->releaseTime=reltime;
-    new->deadline=deadline;
-    new->weight=weight;
-    return new;
+	new->id=(char *)calloc(2,sizeof(char));
+	strcpy(new->id,id);
+  new->processingTime=proctime;
+  new->releaseTime=reltime;
+  new->deadline=deadline;
+  new->weight=weight;
+  return new;
 }
 
 void freeTask(void* task) {
@@ -34,9 +34,8 @@ void freeTask(void* task) {
 
 void viewTask(const void *task) {
     assert(task!=NULL);
-    const Task *tache = (Task*) task;
-    char* idS = tache->id;
-	printf("Tâche : %s - ",idS);
+    Task* tache = (Task*) task;
+		printf("Id : %s -",tache->id);
     printf("Durée : %d - ",tache->processingTime);
     printf("Date de libération : %d - ",tache->releaseTime);
     printf("Date limite : %d - ",tache->deadline);
@@ -50,7 +49,7 @@ void viewTask(const void *task) {
 
 Instance readInstance(char * filename) {
     Instance newInstance = newList(viewTask,freeTask);
-    int lineLength = 13;
+    int lineLength = 15;
 	char line[lineLength];
 	char idS[16];
 	int id, processingTime, releaseTime, deadline, weight;
@@ -62,6 +61,7 @@ Instance readInstance(char * filename) {
     while(fgets(line,lineLength,fp) != NULL){
         sscanf(line, "%d %d %d %d %d", &id, &processingTime, &releaseTime, &deadline, &weight);
         sprintf(idS,"%d",id);
+				//printf("%s\n",idS );
         Task *taskn = newTask(idS,processingTime,releaseTime,deadline,weight);
         listInsertFirst(newInstance,taskn);
     }
@@ -172,44 +172,54 @@ static int fcfs(const void* a, const void* b) {
 void reorderInstance(Instance I,  DataStructure structtype, Order order) {
 	OList *ol;
 	BSTree *bst;
-
+	LNode* node=I->head;
 	switch(structtype){
-	    case OL:  switch (order) {
-                case SPT: ol = newOList(*spt,I->viewData,I->viewData,I->freeData, I->freeData);break;
-                case LPT: ol = newOList(*lpt,I->viewData,I->viewData,I->freeData, I->freeData);break;
-                case WSPT: ol = newOList(*wspt,I->viewData,I->viewData,I->freeData, I->freeData);break;
-                case FCFS: ol = newOList(*fcfs,I->viewData,I->viewData,I->freeData, I->freeData);break;
+/////////////OL//////////////////
+	    case OL:
+			 			switch (order) {
+	              case SPT: ol = newOList(*spt,I->viewData,I->viewData,I->freeData, I->freeData);break;
+	              case LPT: ol = newOList(*lpt,I->viewData,I->viewData,I->freeData, I->freeData);break;
+	              case WSPT: ol = newOList(*wspt,I->viewData,I->viewData,I->freeData, I->freeData);break;
+	              case FCFS: ol = newOList(*fcfs,I->viewData,I->viewData,I->freeData, I->freeData);break;
             }
-            while(I!=NULL){
-                Task* task = (Task*) I->head->data;
-                OListInsert(ol,task,task);
-                I->head = I->head->succ;
+            while(node!=NULL){
+                OListInsert(ol,node->data,node->data);
+                node=node->succ;
             }
-            I=OListToList(ol);break;
-	    case BST: switch (order) {
+            I=OListToList(ol);
+						break;
+
+/////////////BST//////////////////
+	    case BST:
+						switch (order) {
                 case SPT: bst = newBSTree(*spt,I->viewData,I->viewData,I->freeData, I->freeData);break;
                 case LPT: bst = newBSTree(*lpt,I->viewData,I->viewData,I->freeData, I->freeData);break;
                 case WSPT: bst = newBSTree(*wspt,I->viewData,I->viewData,I->freeData, I->freeData);break;
                 case FCFS: bst = newBSTree(*fcfs,I->viewData,I->viewData,I->freeData, I->freeData);break;
             }
-            while(I!=NULL){
-                Task* task = (Task*) I->head->data;
-                BSTreeInsert(bst,task,task);
-                I->head = I->head->succ;
+            while(node!=NULL){
+                BSTreeInsert(bst,node->data,node->data);
+                node=node->succ;
             }
-            I=BSTreeToList(bst);break;
-	    case EBST: switch (order) {
-                case SPT: bst = newEBSTree(*spt,I->viewData,I->viewData,I->freeData, I->freeData);break;
-                case LPT: bst = newBSTree(*lpt,I->viewData,I->viewData,I->freeData, I->freeData);break;
-                case WSPT: bst = newBSTree(*wspt,I->viewData,I->viewData,I->freeData, I->freeData);break;
-                case FCFS: bst = newBSTree(*fcfs,I->viewData,I->viewData,I->freeData, I->freeData);break;
+            I=BSTreeToList(bst);
+						break;
+/////////////EBST//////////////////
+			case EBST:
+
+					switch (order) {
+			                case SPT: bst = newEBSTree(*spt,I->viewData,I->viewData,I->freeData, I->freeData);break;
+			                case LPT: bst = newEBSTree(*lpt,I->viewData,I->viewData,I->freeData, I->freeData);break;
+			                case WSPT: bst = newEBSTree(*wspt,I->viewData,I->viewData,I->freeData, I->freeData);break;
+			                case FCFS: bst = newEBSTree(*fcfs,I->viewData,I->viewData,I->freeData, I->freeData);break;
+			            }
+
+            while(node!=NULL){
+							EBSTreeInsert(bst,node->data,node->data);
+							node=node->succ;
             }
-            while(I!=NULL){
-                Task* task = (Task*) I->head->data;
-                EBSTreeInsert(bst,task,task);
-                I->head = I->head->succ;
-            }
-            I=BSTreeToList(bst);break;
+             I=BSTreeToList(bst);
+			break;
+////////DEFAULT////////////////
 	    default: break;
 	}
 
