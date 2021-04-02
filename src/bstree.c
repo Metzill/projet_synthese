@@ -52,14 +52,13 @@ BSTree * newBSTree(int (*preceed)(const void*, const void*),
 static BSTNode* insertBSTNode(BSTNode* curr, void* key, void* data, int (*preceed)(const void*, const void*)) {
 	if(curr==NULL)
 		return newBSTNode(key,data);
-	if(preceed(key,curr->key)){
+	if(preceed(curr->key,key)){
 		curr->left=insertBSTNode(curr->left,key,data,preceed);
 		return curr;
 	}else{
 		curr->right=insertBSTNode(curr->right,key,data,preceed);
 		return curr;
  }
-
 }
 
 /**
@@ -123,6 +122,7 @@ BSTree * newEBSTree(int (*preceed)(const void*, const void*),
 static BSTNode* rotateLeft(BSTNode* y) {
 	assert(y);
 	assert(y->right);
+
 	BSTNode* x=y->right;
 	y->right=x->left;
 	x->left=y;
@@ -166,12 +166,13 @@ static BSTNode* rotateLeft(BSTNode* y) {
 static BSTNode* rotateRight(BSTNode* y) {
 	assert(y);
 	assert(y->left);
-	/* A FAIRE */
+
 	BSTNode* x=y->left;
 	y->left=x->right;
 	x->right=y;
 	int by=y->bfactor;
 	int byleft=x->bfactor;
+
 	if(by==2 && byleft==1){
 		y->bfactor=0;
 		x->bfactor=0;
@@ -247,17 +248,17 @@ static BSTNode* insertEBSTNode(BSTNode* curr, void* key, void* data, int (*prece
   // Left Right Case
   if (bfactor > 1 && !preceed(key,curr->left->key))
   {
-      curr->left =  rotateLeft(curr->left);
+      rotateLeft(curr->left);
       return rotateRight(curr);
   }
 
   // Right Left Case
   if (bfactor < -1 && preceed(key,curr->right->key))
   {
-      curr->right = rotateRight(curr->right);
+      rotateRight(curr->right);
       return rotateLeft(curr);
   }
-	
+
 	curr->bfactor=hauteur(curr->left)-hauteur(curr->right);
 
 	return curr;
@@ -325,9 +326,9 @@ void freeBSTree(BSTree* T, int deleteKey, int deleteData) {
 static void inorderView(BSTNode *curr, void (*viewKey)(const void*), void (*viewData)(const void*)) {
 	if (curr!=NULL){
 	 inorderView(curr->left,viewKey,viewData);
-	 inorderView(curr->right,viewKey,viewData);
 	 viewData(curr->data);
 	 viewKey(curr->key);
+	 inorderView(curr->right,viewKey,viewData);
 	}
 }
 
@@ -349,8 +350,8 @@ void viewBSTree(const BSTree* T) {
 static void treetolist(BSTNode* curr, List* list) {
 	if (curr!=NULL){
 	 treetolist(curr->left,list);
-	 treetolist(curr->right,list);
 	 listInsertLast(list,curr->data);
+	 treetolist(curr->right,list);
 	}
 
 }
