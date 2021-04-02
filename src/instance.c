@@ -12,36 +12,36 @@
  * TASK
  ***********************************************/
 
-Task * newTask(char* id, int proctime, int reltime, int deadline, int weight) {
-	assert(proctime > 0);
-	assert(reltime >= 0);
-	assert((deadline >= reltime + proctime));
-	assert(strcmp(id,""));
-	Task *new = (Task *) malloc(1 * sizeof(Task));
-	new->id= (char*) calloc(strlen(id)+1,sizeof(char));
-    strcpy(new->id,id);
-    new->processingTime=proctime;
-    new->releaseTime=reltime;
-    new->deadline=deadline;
-    new->weight=weight;
+Task *newTask(char *id, int proctime, int reltime, int deadline, int weight) {
+    assert(proctime > 0);
+    assert(reltime >= 0);
+    assert((deadline >= reltime + proctime));
+    assert(strcmp(id, ""));
+    Task *new = (Task *) malloc(1 * sizeof(Task));
+    new->id = (char *) calloc(strlen(id) + 1, sizeof(char));
+    strcpy(new->id, id);
+    new->processingTime = proctime;
+    new->releaseTime = reltime;
+    new->deadline = deadline;
+    new->weight = weight;
     return new;
 }
 
-void freeTask(void* task) {
-    assert(task!=NULL);
-    Task *tache = (Task*) task;
+void freeTask(void *task) {
+    assert(task != NULL);
+    Task *tache = (Task *) task;
     free(tache->id);
     free(task);
 }
 
 void viewTask(const void *task) {
-    assert(task!=NULL);
-    const Task *tache = (Task*) task;
-	fprintf(stdout,"Tâche : %s - ",tache->id);
-    fprintf(stdout,"Durée : %d - ",tache->processingTime);
-    fprintf(stdout,"Date de libération : %d - ",tache->releaseTime);
-    fprintf(stdout,"Date limite : %d - ",tache->deadline);
-    fprintf(stdout,"Poids : %d \n",tache->weight);
+    assert(task != NULL);
+    const Task *tache = (Task *) task;
+    fprintf(stdout, "Tâche : %s - ", tache->id);
+    fprintf(stdout, "Durée : %d - ", tache->processingTime);
+    fprintf(stdout, "Date de libération : %d - ", tache->releaseTime);
+    fprintf(stdout, "Date limite : %d - ", tache->deadline);
+    fprintf(stdout, "Poids : %d \n", tache->weight);
 
 }
 
@@ -49,35 +49,35 @@ void viewTask(const void *task) {
  * INSTANCE
  ************************************************/
 
-Instance readInstance(char * filename) {
-    Instance newInstance = newList(viewTask,freeTask);
+Instance readInstance(char *filename) {
+    Instance newInstance = newList(viewTask, freeTask);
     int lineLength = 16;
-	char line[lineLength];
-	char idS[16];
-	int id, processingTime, releaseTime, deadline, weight;
-	FILE *fp;
-    if((fp = fopen(filename, "rt")) == NULL) {
+    char line[lineLength];
+    char idS[16];
+    int id, processingTime, releaseTime, deadline, weight;
+    FILE *fp;
+    if ((fp = fopen(filename, "rt")) == NULL) {
         fprintf(stderr, "Error while opening %s\n", filename);
         exit(EXIT_FAILURE);
     }
-    while(fgets(line,lineLength,fp) != NULL){
+    while (fgets(line, lineLength, fp) != NULL) {
         sscanf(line, "%d %d %d %d %d", &id, &processingTime, &releaseTime, &deadline, &weight);
-        sprintf(idS,"%d",id);
-				//printf("%s\n",idS );
-        Task *taskn = newTask(idS,processingTime,releaseTime,deadline,weight);
-        listInsertFirst(newInstance,taskn);
+        sprintf(idS, "%d", id);
+        //printf("%s\n",idS );
+        Task *taskn = newTask(idS, processingTime, releaseTime, deadline, weight);
+        listInsertFirst(newInstance, taskn);
     }
     return newInstance;
 
 }
 
 void viewInstance(Instance I) {
-	assert(I!=NULL);
-	viewList(I);
+    assert(I != NULL);
+    viewList(I);
 }
 
 void freeInstance(Instance I, int deleteData) {
-	freeList(I, deleteData);
+    freeList(I, deleteData);
 }
 
 /*****************************************************************************
@@ -93,13 +93,13 @@ void freeInstance(Instance I, int deleteData) {
  * (+) durée de a < durée de b
  * (+) durée de a = durée de b ET date de libération de a < date de libération de b
  */
-static int spt(const void* a, const void* b) {
-    Task *ta = (Task*) a;
-    Task *tb = (Task*) b;
-    if ( (ta->processingTime < tb->processingTime)
-    || ((ta->processingTime == tb->processingTime) && (ta->releaseTime < tb->releaseTime)) ){
+static int spt(const void *a, const void *b) {
+    Task *ta = (Task *) a;
+    Task *tb = (Task *) b;
+    if ((ta->processingTime < tb->processingTime)
+        || ((ta->processingTime == tb->processingTime) && (ta->releaseTime < tb->releaseTime))) {
         return 1;
-    } else{
+    } else {
         return 0;
     }
 }
@@ -113,13 +113,13 @@ static int spt(const void* a, const void* b) {
  * (+) durée de a > durée de b
  * (+) durée de a = durée de b ET date de libération de a < date de libération de b
  */
-static int lpt(const void* a, const void* b) {
-    Task *ta = (Task*) a;
-    Task *tb = (Task*) b;
-    if ( (ta->processingTime > tb->processingTime)
-         || ((ta->processingTime == tb->processingTime) && (ta->releaseTime < tb->releaseTime)) ){
+static int lpt(const void *a, const void *b) {
+    Task *ta = (Task *) a;
+    Task *tb = (Task *) b;
+    if ((ta->processingTime > tb->processingTime)
+        || ((ta->processingTime == tb->processingTime) && (ta->releaseTime < tb->releaseTime))) {
         return 1;
-    } else{
+    } else {
         return 0;
     }
 }
@@ -137,14 +137,14 @@ static int lpt(const void* a, const void* b) {
  *     ET durée de a = durée de b
  *     ET date de libération de a < date de libération de b
  */
-static int wspt(const void* a, const void* b) {
-    Task *ta = (Task*) a;
-    Task *tb = (Task*) b;
+static int wspt(const void *a, const void *b) {
+    Task *ta = (Task *) a;
+    Task *tb = (Task *) b;
     int awd = ta->weight / ta->processingTime, bwd = tb->weight / tb->processingTime;
-    if ( (awd > bwd) || ((awd == bwd) && (ta->processingTime > tb->processingTime))
-         || ((awd == bwd) && (ta->processingTime == tb->processingTime) && (ta->releaseTime < tb->releaseTime)) ){
+    if ((awd > bwd) || ((awd == bwd) && (ta->processingTime > tb->processingTime))
+        || ((awd == bwd) && (ta->processingTime == tb->processingTime) && (ta->releaseTime < tb->releaseTime))) {
         return 1;
-    } else{
+    } else {
         return 0;
     }
 }
@@ -159,69 +159,92 @@ static int wspt(const void* a, const void* b) {
  * (+) date de libération de a = date de libération de b
  *     ET durée de a > durée de b
  */
-static int fcfs(const void* a, const void* b) {
-    Task *ta = (Task*) a;
-    Task *tb = (Task*) b;
+static int fcfs(const void *a, const void *b) {
+    Task *ta = (Task *) a;
+    Task *tb = (Task *) b;
 
     if ((ta->releaseTime < tb->releaseTime)
-    || (ta->releaseTime == tb->releaseTime) && (ta->processingTime > tb->processingTime) ) {
+        || (ta->releaseTime == tb->releaseTime) && (ta->processingTime > tb->processingTime)) {
         return 1;
     } else {
         return 0;
     }
 }
 
-void reorderInstance(Instance I,  DataStructure structtype, Order order) {
-	OList *ol;
-	BSTree *bst;
-	LNode* node=I->head;
-	switch(structtype){
-	    case OL:  switch (order) {
-                case SPT: ol = newOList(*spt,I->viewData,I->viewData,I->freeData, I->freeData);break;
-                case LPT: ol = newOList(*lpt,I->viewData,I->viewData,I->freeData, I->freeData);break;
-                case WSPT: ol = newOList(*wspt,I->viewData,I->viewData,I->freeData, I->freeData);break;
-                case FCFS: ol = newOList(*fcfs,I->viewData,I->viewData,I->freeData, I->freeData);break;
+void reorderInstance(Instance I, DataStructure structtype, Order order) {
+    OList *ol;
+    BSTree *bst;
+    LNode *node = I->head;
+    switch (structtype) {
+        case OL:
+            switch (order) {
+                case SPT:
+                    ol = newOList(*spt, I->viewData, I->viewData, I->freeData, I->freeData);
+                    break;
+                case LPT:
+                    ol = newOList(*lpt, I->viewData, I->viewData, I->freeData, I->freeData);
+                    break;
+                case WSPT:
+                    ol = newOList(*wspt, I->viewData, I->viewData, I->freeData, I->freeData);
+                    break;
+                case FCFS:
+                    ol = newOList(*fcfs, I->viewData, I->viewData, I->freeData, I->freeData);
+                    break;
             }
-            while(node!=NULL){
-                OListInsert(ol,node->data,node->data);
-                node=node->succ;
+            while (node != NULL) {
+                OListInsert(ol, node->data, node->data);
+                node = node->succ;
             }
-            I=OListToList(ol);
-						freeOList(ol,0,0);
-						break;
-
-/////////////BST//////////////////
-	    case BST:
-						switch (order) {
-                case SPT: bst = newBSTree(*spt,I->viewData,I->viewData,I->freeData, I->freeData);break;
-                case LPT: bst = newBSTree(*lpt,I->viewData,I->viewData,I->freeData, I->freeData);break;
-                case WSPT: bst = newBSTree(*wspt,I->viewData,I->viewData,I->freeData, I->freeData);break;
-                case FCFS: bst = newBSTree(*fcfs,I->viewData,I->viewData,I->freeData, I->freeData);break;
+            I = OListToList(ol);
+            viewInstance(I);
+            break;
+        case BST:
+            switch (order) {
+                case SPT:
+                    bst = newBSTree(*spt, I->viewData, I->viewData, I->freeData, I->freeData);
+                    break;
+                case LPT:
+                    bst = newBSTree(*lpt, I->viewData, I->viewData, I->freeData, I->freeData);
+                    break;
+                case WSPT:
+                    bst = newBSTree(*wspt, I->viewData, I->viewData, I->freeData, I->freeData);
+                    break;
+                case FCFS:
+                    bst = newBSTree(*fcfs, I->viewData, I->viewData, I->freeData, I->freeData);
+                    break;
             }
-            while(node!=NULL){
-                BSTreeInsert(bst,node->data,node->data);
-                node=node->succ;
+            while (node != NULL) {
+                BSTreeInsert(bst, node->data, node->data);
+                node = node->succ;
             }
             I=BSTreeToList(bst);
 						freeBSTree(bst,0,0);
 						break;
-/////////////EBST//////////////////
 			case EBST:
 
-					switch (order) {
-			                case SPT: bst = newEBSTree(*spt,I->viewData,I->viewData,I->freeData, I->freeData);break;
-			                case LPT: bst = newEBSTree(*lpt,I->viewData,I->viewData,I->freeData, I->freeData);break;
-			                case WSPT: bst = newEBSTree(*wspt,I->viewData,I->viewData,I->freeData, I->freeData);break;
-			                case FCFS: bst = newEBSTree(*fcfs,I->viewData,I->viewData,I->freeData, I->freeData);break;
-			            }
-            while(node!=NULL){
-							EBSTreeInsert(bst,node->data,node->data);
-							node=node->succ;
+            switch (order) {
+                case SPT:
+                    bst = newEBSTree(*spt, I->viewData, I->viewData, I->freeData, I->freeData);
+                    break;
+                case LPT:
+                    bst = newEBSTree(*lpt, I->viewData, I->viewData, I->freeData, I->freeData);
+                    break;
+                case WSPT:
+                    bst = newEBSTree(*wspt, I->viewData, I->viewData, I->freeData, I->freeData);
+                    break;
+                case FCFS:
+                    bst = newEBSTree(*fcfs, I->viewData, I->viewData, I->freeData, I->freeData);
+                    break;
+            }
+            while (node != NULL) {
+                EBSTreeInsert(bst, node->data, node->data);
+                node = node->succ;
             }
             I=BSTreeToList(bst);
-						freeBSTree(bst,0,0);
+			freeBSTree(bst,0,0);
             break;
-	    default: break;
-	}
+        default:
+            break;
+    }
 
 }
