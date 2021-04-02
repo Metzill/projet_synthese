@@ -11,11 +11,10 @@
 #include "schedule.h"
 
 int main(int argv, char *argc[]) {
-	TestOList();
-	// Instance I = readInstance("./data/exemple");
-	// viewInstance(I);
-	// reorderInstance(I, EBST, LPT);
-	// viewInstance(I);
+	 Instance I = readInstance("./data/exemple");
+	 viewInstance(I);
+	 reorderInstance(I, EBST, LPT);
+	 viewInstance(I);
 	//
 	// Schedule *SOL = newSchedule(OL, 1);
 	// computeSchedule(SOL, I);
@@ -47,7 +46,7 @@ int main(int argv, char *argc[]) {
 	// printf("SumWjTj=%ld\n", SumWjTj(SEBST));
 	// freeSchedule(SEBST);
 	//
-	// freeInstance(I, 1);
+	 freeInstance(I, 1);
 
 	return EXIT_SUCCESS;
 }

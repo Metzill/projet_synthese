@@ -29,17 +29,17 @@ Task * newTask(char* id, int proctime, int reltime, int deadline, int weight) {
 void freeTask(void* task) {
     assert(task!=NULL);
     Task *tache = (Task*) task;
-    free(tache->id);
     free(task);
 }
 
 void viewTask(const void *task) {
     assert(task!=NULL);
     const Task *tache = (Task*) task;
-	printf("Tâche : %s \n",tache->id);
-    printf("Durée : %d \n",tache->processingTime);
-    printf("Date de libération : %d \n",tache->releaseTime);
-    printf("Date limite : %d \n",tache->deadline);
+    char* idS = tache->id;
+	printf("Tâche : %s - ",idS);
+    printf("Durée : %d - ",tache->processingTime);
+    printf("Date de libération : %d - ",tache->releaseTime);
+    printf("Date limite : %d - ",tache->deadline);
     printf("Poids : %d \n",tache->weight);
 
 }
@@ -52,15 +52,16 @@ Instance readInstance(char * filename) {
     Instance newInstance = newList(viewTask,freeTask);
     int lineLength = 13;
 	char line[lineLength];
-	char idS[10];
-	int processingTime, releaseTime, deadline, weight;
+	char idS[16];
+	int id, processingTime, releaseTime, deadline, weight;
 	FILE *fp;
-    if((fp = fopen("filename", "rt")) == NULL) {
-        fprintf(stderr, "Error while opening %s\n", "data/town.txt");
+    if((fp = fopen(filename, "rt")) == NULL) {
+        fprintf(stderr, "Error while opening %s\n", filename);
         exit(EXIT_FAILURE);
     }
     while(fgets(line,lineLength,fp) != NULL){
-        sscanf(line, "%s %d %d %d %d", idS, &processingTime, &releaseTime, &deadline, &weight);
+        sscanf(line, "%d %d %d %d %d", &id, &processingTime, &releaseTime, &deadline, &weight);
+        sprintf(idS,"%d",id);
         Task *taskn = newTask(idS,processingTime,releaseTime,deadline,weight);
         listInsertFirst(newInstance,taskn);
     }
