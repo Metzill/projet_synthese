@@ -63,6 +63,7 @@ Instance readInstance(char * filename) {
     while(fgets(line,lineLength,fp) != NULL){
         sscanf(line, "%d %d %d %d %d", &id, &processingTime, &releaseTime, &deadline, &weight);
         sprintf(idS,"%d",id);
+				//printf("%s\n",idS );
         Task *taskn = newTask(idS,processingTime,releaseTime,deadline,weight);
         listInsertFirst(newInstance,taskn);
     }
@@ -171,8 +172,7 @@ static int fcfs(const void* a, const void* b) {
 }
 
 void reorderInstance(Instance I,  DataStructure structtype, Order order) {
-    fprintf(stdout,"je suis dans le reorder\n");
-    OList *ol;
+	OList *ol;
 	BSTree *bst;
 	LNode* node=I->head;
 	switch(structtype){
@@ -186,8 +186,12 @@ void reorderInstance(Instance I,  DataStructure structtype, Order order) {
                 OListInsert(ol,node->data,node->data);
                 node=node->succ;
             }
-            I=OListToList(ol);break;
-	    case BST: switch (order) {
+            I=OListToList(ol);
+						break;
+
+/////////////BST//////////////////
+	    case BST:
+						switch (order) {
                 case SPT: bst = newBSTree(*spt,I->viewData,I->viewData,I->freeData, I->freeData);break;
                 case LPT: bst = newBSTree(*lpt,I->viewData,I->viewData,I->freeData, I->freeData);break;
                 case WSPT: bst = newBSTree(*wspt,I->viewData,I->viewData,I->freeData, I->freeData);break;
@@ -198,8 +202,11 @@ void reorderInstance(Instance I,  DataStructure structtype, Order order) {
                 node=node->succ;
             }
             I=BSTreeToList(bst);
-			break;
-			case EBST:switch (order) {
+						break;
+/////////////EBST//////////////////
+			case EBST:
+
+					switch (order) {
 			                case SPT: bst = newEBSTree(*spt,I->viewData,I->viewData,I->freeData, I->freeData);break;
 			                case LPT: bst = newEBSTree(*lpt,I->viewData,I->viewData,I->freeData, I->freeData);break;
 			                case WSPT: bst = newEBSTree(*wspt,I->viewData,I->viewData,I->freeData, I->freeData);break;
