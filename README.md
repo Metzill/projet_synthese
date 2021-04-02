@@ -1,6 +1,7 @@
 # projet_synthese
 
 **Utilisation du programme**
+lien du git : https://github.com/Metzill/projet_synthese
 
 - Télécharger l'archive du programme
 - Extraire le dossier du programme
