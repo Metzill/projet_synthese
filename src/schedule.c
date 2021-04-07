@@ -103,7 +103,7 @@ static int OLFindBackfillingPosition(const OList* scheduledTasks, const Task* ta
     OLNode *node = scheduledTasks->head;
     while (node != NULL) {
         Task *currTask = node->data;
-        int cCurr = (int) node->key + currTask->processingTime; // completion time (date de fin)
+        int* cCurr = (int*) node->key + currTask->processingTime; // completion time (date de fin)
         int cTask = task->releaseTime + task->processingTime;
         Task *nextTask;
 
@@ -112,17 +112,17 @@ static int OLFindBackfillingPosition(const OList* scheduledTasks, const Task* ta
         else
             nextTask = NULL;
 
-        if(cCurr <= task->releaseTime){
+        if(*cCurr <= task->releaseTime){
             if(nextTask==NULL){
                 return -1;
             }else if(nextTask->releaseTime > cTask){
                 return task->releaseTime;
             }
-        }else if(cCurr > task->releaseTime){
+        }else if(*cCurr > task->releaseTime){
             if(nextTask==NULL){
                 return -1;
             }else if(nextTask->releaseTime > cTask){
-                return cCurr;
+                return *cCurr;
             }
         }
         node = node->succ;
@@ -140,12 +140,12 @@ static int OLFindBackfillingPosition(const OList* scheduledTasks, const Task* ta
 static int OLFindStartingTime(const OList *scheduledTasks, const Task* task, int backfilling) {
     OLNode *node = scheduledTasks->head;
     Task *tailTask = scheduledTasks->tail->data;
-    int *keyTail = (int*) scheduledTasks->tail->key;
+    int* keyTail = (int*) scheduledTasks->tail->key;
     int startingTime;
     if (backfilling)
         startingTime = OLFindBackfillingPosition(scheduledTasks,task);
     if (!backfilling || startingTime == -1){
-        return max((keyTail + tailTask->processingTime), task->releaseTime);
+        return max((*keyTail + tailTask->processingTime), task->releaseTime);
     }else {
         return startingTime;
     }
