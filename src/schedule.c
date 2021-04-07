@@ -99,7 +99,35 @@ void addTaskToSchedule(Schedule* sched, int startingTime, Task* task) {
  * NB : fonction itérative.
  */
 static int OLFindBackfillingPosition(const OList* scheduledTasks, const Task* task) {
-	/* A FAIRE */
+	assert(scheduledTasks->numelm > 0);
+    OLNode *node = scheduledTasks->head;
+    while (node != NULL) {
+        Task *currTask = node->data;
+        int cCurr = (int) node->key + currTask->processingTime; // completion time (date de fin)
+        int cTask = task->releaseTime + task->processingTime;
+        Task *nextTask;
+
+        if(node->succ!=NULL)
+            nextTask = node->succ->data;
+        else
+            nextTask = NULL;
+
+        if(cCurr <= task->releaseTime){
+            if(nextTask==NULL){
+                return -1;
+            }else if(nextTask->releaseTime > cTask){
+                return task->releaseTime;
+            }
+        }else if(cCurr > task->releaseTime){
+            if(nextTask==NULL){
+                return -1;
+            }else if(nextTask->releaseTime > cTask){
+                return cCurr;
+            }
+        }
+        node = node->succ;
+    }
+    return -1;
 }
 
 /**
@@ -110,7 +138,17 @@ static int OLFindBackfillingPosition(const OList* scheduledTasks, const Task* ta
  * NB : La fonction n'ajoute pas la tâche dans l'ordonnancement !
  */
 static int OLFindStartingTime(const OList *scheduledTasks, const Task* task, int backfilling) {
-	/* A FAIRE */
+    OLNode *node = scheduledTasks->head;
+    Task *tailTask = scheduledTasks->tail->data;
+    int *keyTail = (int*) scheduledTasks->tail->key;
+    int startingTime;
+    if (backfilling)
+        startingTime = OLFindBackfillingPosition(scheduledTasks,task);
+    if (!backfilling || startingTime == -1){
+        return max((keyTail + tailTask->processingTime), task->releaseTime);
+    }else {
+        return startingTime;
+    }
 }
 
 /**
