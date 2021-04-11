@@ -122,7 +122,7 @@ static int OLFindBackfillingPosition(const OList* scheduledTasks, const Task* ta
             if(nextTask==NULL){
                 return -1;
             }else if(nextTask->releaseTime > cTask){
-                return *cCurr;
+                return *cCurr->releaseTime;
             }
         }
         node = node->succ;
@@ -160,7 +160,36 @@ static int OLFindStartingTime(const OList *scheduledTasks, const Task* task, int
  * NB : fonction récursive, l'ordre infixe est conseillé.
  */
 static int BSTFindBackfillingPosition(const BSTree* scheduledTasks, const BSTNode* curr, const Task* task) {
-	/* A FAIRE */
+	  assert(scheduledTasks->numelm > 0);
+    if (curr != NULL) {
+        Task *currTask = node->data;
+        int* cCurr = (int*) node->key + currTask->processingTime; // completion time (date de fin)
+        int cTask = task->releaseTime + task->processingTime;
+        Task *nextLeftTask;
+				Task *nextRightTask;
+				if(curr->releaseTime > task->releaseTime)
+					return BSTFindBackfillingPosition(scheduledTasks,curr->left,task);
+
+///Recherche de position du noeud adéquat///
+
+				if(node->left!=NULL)
+						Left = node->left->data;
+						int* cLeft = (int*) node->left->key + Left->processingTime;
+						if(*cLeft < task->releaseTime)
+							return task->releaseTime;
+
+				if(node->right!=NULL)
+						Right = node->right->data;
+						if(cCurr > task->releaseTime && Right->releaseTime < cTask)
+							return cCurr;
+						if(cCurr < task->releaseTime && Right->releaseTime < cTask)
+							return task->releaseTime;
+
+
+
+			return BSTFindBackfillingPosition(scheduledTasks,curr->right,task);
+    }
+    return -1;
 }
 
 /**
