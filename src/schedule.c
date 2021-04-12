@@ -122,7 +122,7 @@ static int OLFindBackfillingPosition(const OList* scheduledTasks, const Task* ta
             if(nextTask==NULL){
                 return -1;
             }else if(nextTask->releaseTime > cTask){
-                return *cCurr->releaseTime;
+                return *cCurr;
             }
         }
         node = node->succ;
@@ -162,27 +162,29 @@ static int OLFindStartingTime(const OList *scheduledTasks, const Task* task, int
 static int BSTFindBackfillingPosition(const BSTree* scheduledTasks, const BSTNode* curr, const Task* task) {
 	  assert(scheduledTasks->numelm > 0);
     if (curr != NULL) {
-        Task *currTask = node->data;
-        int* cCurr = (int*) node->key + currTask->processingTime; // completion time (date de fin)
+        Task *currTask = curr->data;
+        int* cCurr = (int*) curr->key + currTask->processingTime; // completion time (date de fin)
         int cTask = task->releaseTime + task->processingTime;
-        Task *nextLeftTask;
-				Task *nextRightTask;
-				if(curr->releaseTime > task->releaseTime)
+        Task *Left;
+				Task *Right;
+				if(currTask->releaseTime > task->releaseTime && curr->left != NULL)
 					return BSTFindBackfillingPosition(scheduledTasks,curr->left,task);
 
 ///Recherche de position du noeud adéquat///
 
-				if(node->left!=NULL)
-						Left = node->left->data;
-						int* cLeft = (int*) node->left->key + Left->processingTime;
+				if(curr->left!=NULL)
+						Left = curr->left->data;
+						int* cLeft = (int*) curr->left->key + Left->processingTime;
 						if(*cLeft < task->releaseTime)
 							return task->releaseTime;
+				else if(cTask < currTask->releaseTime)
+						return task->releaseTime;
 
-				if(node->right!=NULL)
-						Right = node->right->data;
-						if(cCurr > task->releaseTime && Right->releaseTime < cTask)
-							return cCurr;
-						if(cCurr < task->releaseTime && Right->releaseTime < cTask)
+				if(curr->right!=NULL)
+						Right = curr->right->data;
+						if(*cCurr > task->releaseTime && Right->releaseTime < cTask)
+							return *cCurr;
+						if(*cCurr < task->releaseTime && Right->releaseTime < cTask)
 							return task->releaseTime;
 
 
