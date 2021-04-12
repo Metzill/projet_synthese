@@ -247,7 +247,13 @@ void computeSchedule(Schedule *sched, const Instance I) {
  * NB : Procédure itérative
  */
 static void OLSaveSchedule(const OList* scheduledTasks, FILE* fd) {
-	/* A FAIRE */
+    assert(scheduledTasks->numelm > 0);
+    OLNode *node = scheduledTasks->head;
+    while (node != NULL) {
+        Task *currTask = node->data;
+        fprintf(fd,"%s %d %d %d %d\n",currTask->id, currTask->processingTime, currTask->releaseTime, currTask->deadline, currTask->weight);
+        node = node->succ;
+    }
 }
 
 /**
@@ -258,7 +264,13 @@ static void OLSaveSchedule(const OList* scheduledTasks, FILE* fd) {
  *      Pensez à un parcours infixe.
  */
 static void BSTSaveSchedule(const BSTNode* curr, FILE* fd) {
-	/* A FAIRE */
+	if(curr != NULL) {
+        BSTSaveSchedule(curr->left,fd);
+        Task *currTask = curr->data;
+        fprintf(fd,"%s %d %d %d %d\n",currTask->id, currTask->processingTime, currTask->releaseTime, currTask->deadline, currTask->weight);
+        BSTSaveSchedule(curr->right,fd);
+	}
+
 }
 
 void saveSchedule(const Schedule * sched, char* filename) {
@@ -290,7 +302,38 @@ void saveSchedule(const Schedule * sched, char* filename) {
 /////////////////////// makespan ///////////////////////
 
 long makespan(const Schedule * sched) {
-	/* A FAIRE */
+    OList *ol;
+    BSTree *bst;
+    BSTNode *maxNode;
+    Task *lastTask;
+    long* lastTaskCompletionTime;
+
+    switch (sched->structtype) {
+        case OL:
+            ol = sched->scheduledTasks;
+            OLNode *tailNode = ol->tail;
+            lastTask = tailNode->data;
+            lastTaskCompletionTime = (long*) tailNode->key + lastTask->processingTime; // completion time (date de fin);
+            return *lastTaskCompletionTime;
+            break;
+        case BST:
+            bst = sched->scheduledTasks;
+            maxNode = BSTMax(bst->root);
+            lastTask = maxNode->data;
+            lastTaskCompletionTime = (long*) maxNode->key + lastTask->processingTime; // completion time (date de fin);
+            return *lastTaskCompletionTime;
+            break;
+        case EBST:
+            bst = sched->scheduledTasks;
+            maxNode = BSTMax(bst->root);
+            lastTask = maxNode->data;
+            lastTaskCompletionTime = (long*) maxNode->key + lastTask->processingTime; // completion time (date de fin);
+            return *lastTaskCompletionTime;
+            break;
+        default:
+            error("Schedule:saveSchedule : invalid data structure.");
+            break;
+    }
 }
 
 /////////////////////// SumWjCj ///////////////////////
