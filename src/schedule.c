@@ -187,8 +187,6 @@ static int BSTFindBackfillingPosition(const BSTree* scheduledTasks, const BSTNod
 						if(*cCurr < task->releaseTime && Right->releaseTime < cTask)
 							return task->releaseTime;
 
-
-
 			return BSTFindBackfillingPosition(scheduledTasks,curr->right,task);
     }
     return -1;
@@ -203,7 +201,17 @@ static int BSTFindBackfillingPosition(const BSTree* scheduledTasks, const BSTNod
  *      Utiliser la fonction récursive findBackfillingPosition.
  */
 static int BSTFindStartingTime(const BSTree *scheduledTasks, const Task* task, int backfilling) {
-	/* A FAIRE */
+	BSTNode *node = BSTMax(scheduledTasks->root);
+	int* keyMax = (int*) node->key;
+	Task *tailTask = node->data;
+	int startingTime;
+	if (backfilling)
+			startingTime = BSTFindBackfillingPosition(scheduledTasks,node,task);
+	if (!backfilling || startingTime == -1){
+			return max((*keyMax + tailTask->processingTime), task->releaseTime);
+	}else {
+			return startingTime;
+	}
 }
 
 int findStartingTime(const Schedule *sched, const Task* task) {
