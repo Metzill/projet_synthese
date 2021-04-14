@@ -367,33 +367,20 @@ List* BSTreeToList(const BSTree* T) {
 
 BSTNode* BSTMin(BSTNode* node) {
 	assert(node != NULL);
-
-	BSTNode* tempoG=BSTMin(node->left);
-	BSTNode* tempoD=BSTMin(node->right);
-	BSTNode* petit=node;
-
-	if(petit->key>tempoG->key)
-		petit=tempoG;
-	if(petit->key>tempoD->key)
-		petit=tempoD;
-
-	return petit;
+ if(node->left==NULL)
+ 	return node;
+else
+	return BSTMax(node->right);
 
 }
 
 BSTNode* BSTMax(BSTNode* node) {
 	assert(node != NULL);
+ if(node->right==NULL)
+ 	return node;
+else
+	return BSTMax(node->right);
 
-	BSTNode* tempoG=BSTMin(node->left);
-	BSTNode* tempoD=BSTMin(node->right);
-	BSTNode* grand=node;
-
-	if(grand->key<tempoG->key)
-		grand=tempoG;
-	if(grand->key<tempoD->key)
-		grand=tempoD;
-
-	return grand;
 }
 
 /**
