@@ -344,7 +344,19 @@ long makespan(const Schedule * sched) {
  * représenté par la liste ordonnée scheduledTasks.
  */
 static long OLSumWjCj(const OList* scheduledTasks) {
-	/* A FAIRE */
+	/* A Verifier */
+	long Somme=0;
+	long Cj;
+	OLNode *curr=scheduledTasks->head;
+
+	while(curr){
+		Task *currTask=(Task*) curr->data;
+		Cj=currTask->processingTime + (long )curr->key;
+		Somme+=Cj+currTask->weight;
+		curr=curr->succ;
+	}
+	return Somme;
+
 }
 
 /**
@@ -354,7 +366,16 @@ static long OLSumWjCj(const OList* scheduledTasks) {
  * NB : fonction récursive
  */
 static long BSTSumWjCj(const BSTNode* curr) {
-	/* A FAIRE */
+	/* A Verifier */
+		if(curr!=NULL){
+			long Somme;
+			Task *currTask=curr->data;
+			long Cj=currTask->processingTime+(long)curr->key;
+			Somme=Cj+currTask->weight;
+			Somme=BSTSumWjCj(curr->left)+BSTSumWjCj(curr->right);
+			return Somme;
+	}
+	exit(-1);
 }
 
 long SumWjCj(const Schedule* sched) {
@@ -382,7 +403,20 @@ long SumWjCj(const Schedule* sched) {
  * représenté par la liste ordonnée scheduledTasks.
  */
 static long OLSumWjFj(const OList* scheduledTasks) {
-	/* A FAIRE */
+	/* A Verifier */
+	long Somme=0;
+	long Cj;
+	long Fj;
+	OLNode *curr=scheduledTasks->head;
+
+	while(curr){
+		Task *currTask=(Task*) curr->data;
+		Cj=currTask->processingTime + (long) curr->key;
+		Fj=Cj-currTask->releaseTime;
+		Somme+=Fj+currTask->weight;
+		curr=curr->succ;
+	}
+	return Somme;
 }
 
 /**
@@ -392,7 +426,17 @@ static long OLSumWjFj(const OList* scheduledTasks) {
  * NB : fonction récursive
  */
 static long BSTSumWjFj(const BSTNode* curr) {
-	/* A FAIRE */
+	/* A Verifier */
+		if(curr!=NULL){
+			long Somme;
+			Task *currTask=curr->data;
+			long Cj=currTask->processingTime+(long)curr->key;
+			long Fj=Cj-currTask->releaseTime;
+			Somme+=Fj+currTask->weight;
+			Somme=BSTSumWjCj(curr->left)+BSTSumWjCj(curr->right);
+			return Somme;
+	}
+	exit(-1);
 }
 
 long SumWjFj(const Schedule* sched) {
@@ -420,7 +464,20 @@ long SumWjFj(const Schedule* sched) {
  * représenté par la liste ordonnée scheduledTasks.
  */
 static long OLSumWjTj(const OList* scheduledTasks) {
-	/* A FAIRE */
+	/* A Verifier */
+	long Somme=0;
+	long Cj;
+	long Tj;
+	OLNode *curr=scheduledTasks->head;
+
+	while(curr){
+		Task *currTask=(Task*) curr->data;
+		Cj=currTask->processingTime + (long )curr->key;
+		Tj=max(0,Cj-currTask->deadline);
+		Somme+=Tj+currTask->weight;
+		curr=curr->succ;
+	}
+	return Somme;
 }
 
 /**
@@ -430,7 +487,17 @@ static long OLSumWjTj(const OList* scheduledTasks) {
  * NB : fonction récursive
  */
 static long BSTSumWjTj(const BSTNode* curr) {
-	/* A FAIRE */
+	/* A Verifier */
+		if(curr!=NULL){
+			long Somme;
+			Task *currTask=curr->data;
+			long Cj=currTask->processingTime+(long)curr->key;
+			long Tj=max(0,Cj-currTask->deadline);
+			Somme+=Tj+currTask->weight;
+			Somme=BSTSumWjCj(curr->left)+BSTSumWjCj(curr->right);
+			return Somme;
+	}
+	exit(-1);
 }
 
 long SumWjTj(const Schedule* sched) {
