@@ -404,10 +404,10 @@ static BSTNode* predecessor(BSTNode* curr, void* key, int (*preceed)(const void*
 	BSTNode* save=NULL;
 	BSTNode* res=NULL;
 	if(preceed(curr->key,key)){
-		 res=successor(curr->left,key,preceed);
+		 res=predecessor(curr->left,key,preceed);
 	}else if(!preceed(curr->key,key)){
 		save=curr;
-		res=successor(curr->right,key,preceed);
+		res=predecessor(curr->right,key,preceed);
 	}
 	else if(curr->left!=NULL){
 		return BSTMax(curr->left);

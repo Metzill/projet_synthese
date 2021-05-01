@@ -141,7 +141,7 @@ static int OLFindStartingTime(const OList *scheduledTasks, const Task* task, int
         startingTime = OLFindBackfillingPosition(scheduledTasks,task);
 			}
     if (!backfilling || startingTime == -1){
-				printf("MAX :%d\n",max((KeyTailValue + tailTask->processingTime),releaseValue));
+				//printf("MAX :%d\n",max((KeyTailValue + tailTask->processingTime),releaseValue));
         return max(releaseValue,(KeyTailValue + tailTask->processingTime));
     }else {
         return startingTime;
@@ -234,8 +234,8 @@ int findStartingTime(const Schedule *sched, const Task* task) {
 
 void computeSchedule(Schedule *sched, const Instance I) {
 	for (LNode* curr = I->head; curr; curr = curr->succ){
-		printf("je vais inserer");
-		I->viewData(curr->data);
+		//printf("je vais inserer");
+		//I->viewData(curr->data);
 		addTaskToSchedule(sched, findStartingTime(sched, curr->data), curr->data);
 	}
 }
