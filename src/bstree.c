@@ -53,10 +53,10 @@ static BSTNode* insertBSTNode(BSTNode* curr, void* key, void* data, int (*precee
 	if(curr==NULL)
 		return newBSTNode(key,data);
 	if(preceed(curr->key,key)){
-		curr->left=insertBSTNode(curr->left,key,data,preceed);
+		curr->right=insertBSTNode(curr->right,key,data,preceed);
 		return curr;
 	}else{
-		curr->right=insertBSTNode(curr->right,key,data,preceed);
+		curr->left=insertBSTNode(curr->left,key,data,preceed);
 		return curr;
  }
 }
@@ -65,9 +65,14 @@ static BSTNode* insertBSTNode(BSTNode* curr, void* key, void* data, int (*precee
  * NB : Utiliser la fonction récursive insertBSTNode.
  */
 void BSTreeInsert(BSTree* T, void* key, void* data) {
-	T->root=insertBSTNode(T->root,key,data,T->preceed);
+	if(T->numelm==0){
+		T->root=newBSTNode(key,data);
+		}
+	else{
+		BSTNode *root=insertBSTNode(T->root,key,data,T->preceed);
+		T->root=root;
+	}
 	T->numelm++;
-
 }
 
 /*********************************************************************
@@ -326,7 +331,9 @@ void freeBSTree(BSTree* T, int deleteKey, int deleteData) {
 static void inorderView(BSTNode *curr, void (*viewKey)(const void*), void (*viewData)(const void*)) {
 	if (curr!=NULL){
 	 inorderView(curr->left,viewKey,viewData);
+	 printf("Data \n");
 	 viewData(curr->data);
+	 printf("Key \n");
 	 viewKey(curr->key);
 	 inorderView(curr->right,viewKey,viewData);
 	}
@@ -392,19 +399,10 @@ else
  */
 static BSTNode* predecessor(BSTNode* curr, void* key, int (*preceed)(const void*, const void*)) {
 	assert(curr != NULL);
-
-	BSTNode* tempoG=predecessor(curr->left,key,preceed);
-	BSTNode* tempoD=predecessor(curr->right,key,preceed);
-
-	if(preceed(curr->key,key)==1)
+	predecessor(curr->right,key,preceed);
+	if(preceed(curr->key,key))
 		return curr;
-	else if (tempoG!=NULL)
-		return tempoG;
-	else if (tempoD!=NULL)
-		return tempoD;
-	else
-		return NULL;
-
+	predecessor(curr->left,key,preceed);
 
 }
 
@@ -428,17 +426,11 @@ BSTNode * findPredecessor(const BSTree * T, const BSTNode* node) {
 static BSTNode* successor(BSTNode* curr, void* key, int (*preceed)(const void*, const void*)) {
 	assert(curr != NULL);
 	/* A FAIRE */
-	BSTNode* tempoG=successor(curr->left,key,preceed);
-	BSTNode* tempoD=successor(curr->right,key,preceed);
-
-	if(preceed(curr->key,key)==0)
+	assert(curr != NULL);
+	predecessor(curr->right,key,preceed);
+	if(!preceed(curr->key,key))
 		return curr;
-	else if (tempoG!=NULL)
-		return tempoG;
-	else if (tempoD!=NULL)
-		return tempoD;
-	else
-		return NULL;
+	predecessor(curr->left,key,preceed);
 }
 
 /**

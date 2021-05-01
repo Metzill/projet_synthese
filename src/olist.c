@@ -69,30 +69,27 @@ void OListInsert(OList * L, void * key, void * data) {
 	if(L->numelm==0) {
 	    L->head=newNode;
 	    L->tail=newNode;
-	    L->numelm++;
 	}else{
 	    OLNode *Tete = L->head;
-        while ( (Tete!=NULL) && (L->preceed(Tete->key,newNode->key)) < 1 ){
+        while ( (Tete!=NULL) && (L->preceed(Tete->key,newNode->key)) == 1){
             Tete=Tete->succ;
         }
         if (Tete == NULL){
             L->tail->succ=newNode;
             newNode->pred=L->tail;
             L->tail=newNode;
-            L->numelm++;
         }else if(Tete==L->head){
             L->head->pred=newNode;
             newNode->succ=L->head;
             L->head=newNode;
-            L->numelm++;
         }else{
             Tete->pred->succ=newNode;
             newNode->pred=Tete->pred;
             newNode->succ=Tete;
             Tete->pred=newNode;
-            L->numelm++;
         }
 	}
+          L->numelm++;
 }
 
 List* OListToList(const OList* L) {

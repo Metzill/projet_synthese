@@ -101,31 +101,37 @@ void addTaskToSchedule(Schedule* sched, int startingTime, Task* task) {
 static int OLFindBackfillingPosition(const OList* scheduledTasks, const Task* task) {
 	assert(scheduledTasks->numelm > 0);
     OLNode *node = scheduledTasks->head;
+		printf("HEAD VALUE ");
+		scheduledTasks->viewData(node->data);
+		printf("\n");
     while (node != NULL) {
+
         Task *currTask = node->data;
-        int* cCurr = (int*) node->key + currTask->processingTime; // completion time (date de fin)
+				int *pointerKey = node->key;
+				int Key=*pointerKey;
+        int cCurr = Key + currTask->processingTime; // completion time (date de fin)
         int cTask = task->releaseTime + task->processingTime;
         Task *nextTask;
 
-        if(node->succ!=NULL)
-            nextTask = node->succ->data;
-        else
-            nextTask = NULL;
+				// printf("Key : %d\n",Key);
+				// printf("processingTime : %d\n",currTask->processingTime);
+			  // printf("cCurr : %d\n",cCurr);
 
-        if(*cCurr <= task->releaseTime){
-            if(nextTask==NULL){
-                return -1;
-            }else if(nextTask->releaseTime > cTask){
-                return task->releaseTime;
-            }
-        }else if(*cCurr > task->releaseTime){
-            if(nextTask==NULL){
-                return -1;
-            }else if(nextTask->releaseTime > cTask){
-                return *cCurr;
-            }
-        }
-        node = node->succ;
+				if(Key>=cTask && node->pred==NULL){
+					return task->releaseTime;
+				}
+
+				if(node->succ!=NULL)
+						nextTask = node->succ->data;
+				else
+						return -1;
+
+				 if(cCurr<=task->releaseTime && nextTask->releaseTime>=cTask){
+					return task->releaseTime;
+				}else if(cCurr>=task->releaseTime && nextTask->releaseTime>=cTask){
+					return cCurr;
+				}
+				node=node->succ;
     }
     return -1;
 }
@@ -138,14 +144,21 @@ static int OLFindBackfillingPosition(const OList* scheduledTasks, const Task* ta
  * NB : La fonction n'ajoute pas la tâche dans l'ordonnancement !
  */
 static int OLFindStartingTime(const OList *scheduledTasks, const Task* task, int backfilling) {
-    OLNode *node = scheduledTasks->head;
+		if(scheduledTasks->numelm==0)
+			return task->releaseTime;
+		//Acquisition des données
     Task *tailTask = scheduledTasks->tail->data;
-    int* keyTail = (int*) scheduledTasks->tail->key;
+    int *keyTail =scheduledTasks->tail->key;
+		int KeyTailValue=*keyTail;
+		int releaseValue=task->releaseTime;
+
     int startingTime;
-    if (backfilling)
+    if (backfilling){
         startingTime = OLFindBackfillingPosition(scheduledTasks,task);
+			}
     if (!backfilling || startingTime == -1){
-        return max((*keyTail + tailTask->processingTime), task->releaseTime);
+				printf("MAX :%d\n",max((KeyTailValue + tailTask->processingTime),releaseValue));
+        return max(releaseValue,(KeyTailValue + tailTask->processingTime));
     }else {
         return startingTime;
     }
@@ -163,7 +176,8 @@ static int BSTFindBackfillingPosition(const BSTree* scheduledTasks, const BSTNod
 	  assert(scheduledTasks->numelm > 0);
     if (curr != NULL) {
         Task *currTask = curr->data;
-        int* cCurr = (int*) curr->key + currTask->processingTime; // completion time (date de fin)
+        int* cCur = (int*) curr->key + currTask->processingTime; // completion time (date de fin)
+				int cCurr=*cCur;
         int cTask = task->releaseTime + task->processingTime;
         Task *Left;
 				Task *Right;
@@ -174,17 +188,18 @@ static int BSTFindBackfillingPosition(const BSTree* scheduledTasks, const BSTNod
 
 				if(curr->left!=NULL)
 						Left = curr->left->data;
-						int* cLeft = (int*) curr->left->key + Left->processingTime;
-						if(*cLeft < task->releaseTime)
-							return task->releaseTime;
+				int* cLef = (int*) curr->left->key + Left->processingTime;
+				int cLeft=*cLef;
+				if(cLeft < task->releaseTime)
+					return task->releaseTime;
 				else if(cTask < currTask->releaseTime)
 						return task->releaseTime;
 
 				if(curr->right!=NULL)
 						Right = curr->right->data;
-						if(*cCurr > task->releaseTime && Right->releaseTime < cTask)
-							return *cCurr;
-						if(*cCurr < task->releaseTime && Right->releaseTime < cTask)
+						if(cCurr > task->releaseTime && Right->releaseTime < cTask)
+							return cCurr;
+						if(cCurr < task->releaseTime && Right->releaseTime < cTask)
 							return task->releaseTime;
 
 			return BSTFindBackfillingPosition(scheduledTasks,curr->right,task);
@@ -201,6 +216,8 @@ static int BSTFindBackfillingPosition(const BSTree* scheduledTasks, const BSTNod
  *      Utiliser la fonction récursive findBackfillingPosition.
  */
 static int BSTFindStartingTime(const BSTree *scheduledTasks, const Task* task, int backfilling) {
+	if(scheduledTasks->numelm==0)
+		return task->releaseTime;
 	BSTNode *node = BSTMax(scheduledTasks->root);
 	int* keyMax = (int*) node->key;
 	Task *tailTask = node->data;
@@ -232,8 +249,11 @@ int findStartingTime(const Schedule *sched, const Task* task) {
 }
 
 void computeSchedule(Schedule *sched, const Instance I) {
-	for (LNode* curr = I->head; curr; curr = curr->succ)
+	for (LNode* curr = I->head; curr; curr = curr->succ){
+		printf("je vais inserer");
+		I->viewData(curr->data);
 		addTaskToSchedule(sched, findStartingTime(sched, curr->data), curr->data);
+	}
 }
 
 /*****************************************************************************
@@ -306,29 +326,29 @@ long makespan(const Schedule * sched) {
     BSTree *bst;
     BSTNode *maxNode;
     Task *lastTask;
-    long* lastTaskCompletionTime;
+    long lastTaskCompletionTime;
 
     switch (sched->structtype) {
         case OL:
             ol = sched->scheduledTasks;
             OLNode *tailNode = ol->tail;
             lastTask = tailNode->data;
-            lastTaskCompletionTime = (long*) tailNode->key + lastTask->processingTime; // completion time (date de fin);
-            return *lastTaskCompletionTime;
+            lastTaskCompletionTime = (long) tailNode->key + lastTask->processingTime; // completion time (date de fin);
+            return lastTaskCompletionTime;
             break;
         case BST:
             bst = sched->scheduledTasks;
             maxNode = BSTMax(bst->root);
             lastTask = maxNode->data;
-            lastTaskCompletionTime = (long*) maxNode->key + lastTask->processingTime; // completion time (date de fin);
-            return *lastTaskCompletionTime;
+            lastTaskCompletionTime = (long) maxNode->key + lastTask->processingTime; // completion time (date de fin);
+            return lastTaskCompletionTime;
             break;
         case EBST:
             bst = sched->scheduledTasks;
             maxNode = BSTMax(bst->root);
             lastTask = maxNode->data;
-            lastTaskCompletionTime = (long*) maxNode->key + lastTask->processingTime; // completion time (date de fin);
-            return *lastTaskCompletionTime;
+            lastTaskCompletionTime = (long) maxNode->key + lastTask->processingTime; // completion time (date de fin);
+            return lastTaskCompletionTime;
             break;
         default:
             error("Schedule:saveSchedule : invalid data structure.");
@@ -352,7 +372,7 @@ static long OLSumWjCj(const OList* scheduledTasks) {
 	while(curr){
 		Task *currTask=(Task*) curr->data;
 		Cj=currTask->processingTime + (long )curr->key;
-		Somme+=Cj+currTask->weight;
+		Somme+=Cj*currTask->weight;
 		curr=curr->succ;
 	}
 	return Somme;
@@ -371,7 +391,7 @@ static long BSTSumWjCj(const BSTNode* curr) {
 			long Somme;
 			Task *currTask=curr->data;
 			long Cj=currTask->processingTime+(long)curr->key;
-			Somme=Cj+currTask->weight;
+			Somme=Cj*currTask->weight;
 			Somme=BSTSumWjCj(curr->left)+BSTSumWjCj(curr->right);
 			return Somme;
 	}
@@ -413,7 +433,7 @@ static long OLSumWjFj(const OList* scheduledTasks) {
 		Task *currTask=(Task*) curr->data;
 		Cj=currTask->processingTime + (long) curr->key;
 		Fj=Cj-currTask->releaseTime;
-		Somme+=Fj+currTask->weight;
+		Somme+=Fj*currTask->weight;
 		curr=curr->succ;
 	}
 	return Somme;
@@ -432,7 +452,7 @@ static long BSTSumWjFj(const BSTNode* curr) {
 			Task *currTask=curr->data;
 			long Cj=currTask->processingTime+(long)curr->key;
 			long Fj=Cj-currTask->releaseTime;
-			Somme+=Fj+currTask->weight;
+			Somme+=Fj*currTask->weight;
 			Somme=BSTSumWjCj(curr->left)+BSTSumWjCj(curr->right);
 			return Somme;
 	}
@@ -474,7 +494,7 @@ static long OLSumWjTj(const OList* scheduledTasks) {
 		Task *currTask=(Task*) curr->data;
 		Cj=currTask->processingTime + (long )curr->key;
 		Tj=max(0,Cj-currTask->deadline);
-		Somme+=Tj+currTask->weight;
+		Somme+=Tj*currTask->weight;
 		curr=curr->succ;
 	}
 	return Somme;
@@ -493,7 +513,7 @@ static long BSTSumWjTj(const BSTNode* curr) {
 			Task *currTask=curr->data;
 			long Cj=currTask->processingTime+(long)curr->key;
 			long Tj=max(0,Cj-currTask->deadline);
-			Somme+=Tj+currTask->weight;
+			Somme+=Tj*currTask->weight;
 			Somme=BSTSumWjCj(curr->left)+BSTSumWjCj(curr->right);
 			return Somme;
 	}
