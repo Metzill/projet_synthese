@@ -377,12 +377,12 @@ BSTNode* BSTMin(BSTNode* node) {
  if(node->left==NULL)
  	return node;
 else
-	return BSTMax(node->right);
+	return BSTMax(node->left);
 
 }
 
 BSTNode* BSTMax(BSTNode* node) {
-	assert(node != NULL);
+    assert(node != NULL);
  if(node->right==NULL)
  	return node;
 else
@@ -399,30 +399,19 @@ else
  */
 static BSTNode* predecessor(BSTNode* curr, void* key, int (*preceed)(const void*, const void*)) {
 	assert(curr != NULL);
-	assert(curr != NULL);
-	/* A Verifier */
 	BSTNode* save=NULL;
-	BSTNode* res=NULL;
-	if(preceed(curr->key,key)){
-		 res=predecessor(curr->left,key,preceed);
-	}else if(!preceed(curr->key,key)){
-		save=curr;
-		res=predecessor(curr->right,key,preceed);
-	}
-	else if(curr->left!=NULL){
-		return BSTMax(curr->left);
-	}else{
-			if(res!=NULL && save !=NULL){
-				if(!preceed(res->key,key) && preceed(res->key,key))
-					return save;
-				else
-					return res;
+	BSTNode* res;
 
-		}else if(res !=NULL){
-			return res;
-		}else
-			return curr;
+	if(preceed(curr->key,key)){
+         save=curr;
+		 res=predecessor(curr->right,key,preceed);
+	}else if(preceed(key,curr->key)){
+		res=predecessor(curr->left,key,preceed);
 	}
+	else {
+		return curr->left != NULL ? BSTMax(curr->left) : curr;
+	}
+	return save!=NULL && !(preceed(res->key,key) || preceed(key,res->key)) ? save : res;
 
 }
 
@@ -444,30 +433,21 @@ BSTNode * findPredecessor(const BSTree * T, const BSTNode* node) {
  * NB : fonction récursive.
  */
 static BSTNode* successor(BSTNode* curr, void* key, int (*preceed)(const void*, const void*)) {
-	assert(curr != NULL);
-	/* A Verifier */
-BSTNode* save=NULL;
-BSTNode* res=NULL;
-if(preceed(curr->key,key)){
-	 save=curr;
-	 res=successor(curr->left,key,preceed);
-}else if(!preceed(curr->key,key)){
-	res=successor(curr->right,key,preceed);
-}
-else if(curr->right!=NULL){
-	return BSTMin(curr->right);
-}else{
-		if(res!=NULL && save !=NULL){
-			if(!preceed(res->key,key) && preceed(res->key,key))
-				return save;
-			else
-				return res;
+    assert(curr != NULL);
+    BSTNode* save=NULL;
+    BSTNode* res;
 
-	}else if(res !=NULL){
-		return res;
-	}else
-		return curr;
-}
+    if(preceed(curr->key,key)){
+        res=successor(curr->right,key,preceed);
+    }else if(preceed(key,curr->key)){
+        save=curr;
+        res=successor(curr->left,key,preceed);
+    }
+    else {
+        return curr->right != NULL ? BSTMin(curr->right) : curr;
+    }
+    return save!=NULL && !(preceed(res->key,key) || preceed(key,res->key)) ? save : res;
+
 }
 
 /**

@@ -14,16 +14,42 @@ int main(int argv, char *argc[]) {
  Instance I = readInstance("./data/exemple");
  reorderInstance(I, OL, SPT);
  //viewInstance(I);
+    int data1=30;
+    int* ptrData1=&data1;
 
-	Schedule *SOL = newSchedule(OL, 1);
-	computeSchedule(SOL, I);
-	viewSchedule(SOL);
-	saveSchedule(SOL, "./data/output_OL");
-	printf("Makespan=%ld\n", makespan(SOL));
-	printf("SumWjCj=%ld\n", SumWjCj(SOL));
-	printf("SumWjFj=%ld\n", SumWjFj(SOL));
-	printf("SumWjTj=%ld\n", SumWjTj(SOL));
-	freeSchedule(SOL);
+    int data2=15;
+    int* ptrData2=&data2;
+
+    int data3=12;
+    int* ptrData3=&data3;
+
+    int data4=17;
+    int* ptrData4=&data4;
+
+    BSTree *T= newBSTree(&compareInt,&viewInt,&viewInt,&freeInt,&freeInt);
+    BSTreeInsert(T,ptrData1,ptrData1);
+
+    BSTreeInsert(T,ptrData2,ptrData2);
+
+    BSTreeInsert(T,ptrData3,ptrData3);
+
+    BSTreeInsert(T,ptrData4,ptrData4);
+
+
+    //viewBSTree(T);
+    //T->viewData(T->root->left->right->data);
+    printf("\n");
+    T->viewData(findSuccessor(T,T->root->left)->data);
+
+//	Schedule *SOL = newSchedule(OL, 1);
+//	computeSchedule(SOL, I);
+//	viewSchedule(SOL);
+//	saveSchedule(SOL, "./data/output_OL");
+//	printf("Makespan=%ld\n", makespan(SOL));
+//	printf("SumWjCj=%ld\n", SumWjCj(SOL));
+//	printf("SumWjFj=%ld\n", SumWjFj(SOL));
+//	printf("SumWjTj=%ld\n", SumWjTj(SOL));
+//	freeSchedule(SOL);
 
 	// Schedule *SBST = newSchedule(BST, 1);
 	// computeSchedule(SBST, I);
