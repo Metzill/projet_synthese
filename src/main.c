@@ -11,23 +11,20 @@
 #include "schedule.h"
 
 int main(int argv, char *argc[]) {
-	 Instance I = readInstance("./data/exemple");
-	 viewInstance(I);
-	 fprintf(stdout,"Reorder :\n");
-	 reorderInstance(I, OL, LPT);
-	 printf("\n");
-	 viewInstance(I);
-	//
-	// Schedule *SOL = newSchedule(OL, 1);
-	// computeSchedule(SOL, I);
-	// viewSchedule(SOL);
-	// saveSchedule(SOL, "./data/output_OL");
-	// printf("Makespan=%ld\n", makespan(SOL));
-	// printf("SumWjCj=%ld\n", SumWjCj(SOL));
-	// printf("SumWjFj=%ld\n", SumWjFj(SOL));
-	// printf("SumWjTj=%ld\n", SumWjTj(SOL));
-	// freeSchedule(SOL);
-	//
+ Instance I = readInstance("./data/exemple");
+ reorderInstance(I, OL, SPT);
+ //viewInstance(I);
+
+	Schedule *SOL = newSchedule(OL, 1);
+	computeSchedule(SOL, I);
+	viewSchedule(SOL);
+	saveSchedule(SOL, "./data/output_OL");
+	printf("Makespan=%ld\n", makespan(SOL));
+	printf("SumWjCj=%ld\n", SumWjCj(SOL));
+	printf("SumWjFj=%ld\n", SumWjFj(SOL));
+	printf("SumWjTj=%ld\n", SumWjTj(SOL));
+	freeSchedule(SOL);
+
 	// Schedule *SBST = newSchedule(BST, 1);
 	// computeSchedule(SBST, I);
 	// viewSchedule(SBST);

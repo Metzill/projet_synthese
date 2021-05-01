@@ -399,10 +399,30 @@ else
  */
 static BSTNode* predecessor(BSTNode* curr, void* key, int (*preceed)(const void*, const void*)) {
 	assert(curr != NULL);
-	predecessor(curr->right,key,preceed);
-	if(preceed(curr->key,key))
-		return curr;
-	predecessor(curr->left,key,preceed);
+	assert(curr != NULL);
+	/* A Verifier */
+	BSTNode* save=NULL;
+	BSTNode* res=NULL;
+	if(preceed(curr->key,key)){
+		 res=successor(curr->left,key,preceed);
+	}else if(!preceed(curr->key,key)){
+		save=curr;
+		res=successor(curr->right,key,preceed);
+	}
+	else if(curr->left!=NULL){
+		return BSTMax(curr->left);
+	}else{
+			if(res!=NULL && save !=NULL){
+				if(!preceed(res->key,key) && preceed(res->key,key))
+					return save;
+				else
+					return res;
+
+		}else if(res !=NULL){
+			return res;
+		}else
+			return curr;
+	}
 
 }
 
@@ -425,12 +445,29 @@ BSTNode * findPredecessor(const BSTree * T, const BSTNode* node) {
  */
 static BSTNode* successor(BSTNode* curr, void* key, int (*preceed)(const void*, const void*)) {
 	assert(curr != NULL);
-	/* A FAIRE */
-	assert(curr != NULL);
-	predecessor(curr->right,key,preceed);
-	if(!preceed(curr->key,key))
+	/* A Verifier */
+BSTNode* save=NULL;
+BSTNode* res=NULL;
+if(preceed(curr->key,key)){
+	 save=curr;
+	 res=successor(curr->left,key,preceed);
+}else if(!preceed(curr->key,key)){
+	res=successor(curr->right,key,preceed);
+}
+else if(curr->right!=NULL){
+	return BSTMin(curr->right);
+}else{
+		if(res!=NULL && save !=NULL){
+			if(!preceed(res->key,key) && preceed(res->key,key))
+				return save;
+			else
+				return res;
+
+	}else if(res !=NULL){
+		return res;
+	}else
 		return curr;
-	predecessor(curr->left,key,preceed);
+}
 }
 
 /**
@@ -440,5 +477,5 @@ BSTNode * findSuccessor(const BSTree * T, const BSTNode* node) {
 	assert(T->root != NULL);
 	assert(node != NULL);
 
-	return predecessor(T->root,node->key,T->preceed);
+	return successor(T->root,node->key,T->preceed);
 }

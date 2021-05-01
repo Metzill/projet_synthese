@@ -7,8 +7,8 @@
 
 /**
  * @brief
- * Construire et initialiser un nouveau nœud d'une liste doublement chaînée ordonnée.
- * Renvoie le nouveau nœud créé.
+ * Construire et initialiser un newNode nœud d'une liste doublement chaînée ordonnée.
+ * Renvoie le newNode nœud créé.
  */
 static OLNode * newOLNode(void* key, void* data) {
     OLNode *new = (OLNode  *) malloc(1 * sizeof(OLNode));
@@ -64,32 +64,35 @@ void viewOList(const OList * L) {
 	free(Tete);
 }
 
-void OListInsert(OList * L, void * key, void * data) {
-	OLNode *newNode = newOLNode(key, data);
-	if(L->numelm==0) {
-	    L->head=newNode;
-	    L->tail=newNode;
-	}else{
-	    OLNode *Tete = L->head;
-        while ( (Tete!=NULL) && (L->preceed(Tete->key,newNode->key)) == 1){
-            Tete=Tete->succ;
+void OListInsert( OList * L, void * key, void * data ) {
+    OLNode * newNode = newOLNode( key, data );
+    assert( newNode != NULL );
+    //if empty
+    if ( L -> numelm == 0 ) {
+        L -> head = newNode;
+        L -> tail = newNode;
+    }
+    else if ( L->preceed(newNode -> key, L -> head -> key )) {
+        newNode -> succ = L -> head;
+        L -> head -> pred = newNode;
+        L -> head = newNode;
+    }
+    else {
+        OLNode * curr = L -> head;
+        while ( curr -> succ != NULL && !L->preceed( newNode -> key, curr -> succ -> key )) {
+            curr = curr -> succ;
         }
-        if (Tete == NULL){
-            L->tail->succ=newNode;
-            newNode->pred=L->tail;
-            L->tail=newNode;
-        }else if(Tete==L->head){
-            L->head->pred=newNode;
-            newNode->succ=L->head;
-            L->head=newNode;
-        }else{
-            Tete->pred->succ=newNode;
-            newNode->pred=Tete->pred;
-            newNode->succ=Tete;
-            Tete->pred=newNode;
+        newNode -> succ = curr -> succ;
+        if ( curr -> succ != NULL ) {
+            newNode -> succ -> pred = newNode;
         }
-	}
-          L->numelm++;
+        else {
+            L -> tail = newNode;
+        }
+        curr -> succ = newNode;
+        newNode -> pred = curr;
+    }
+    L -> numelm++;
 }
 
 List* OListToList(const OList* L) {
