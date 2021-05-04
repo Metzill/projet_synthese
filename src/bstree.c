@@ -331,10 +331,12 @@ void freeBSTree(BSTree* T, int deleteKey, int deleteData) {
 static void inorderView(BSTNode *curr, void (*viewKey)(const void*), void (*viewData)(const void*)) {
 	if (curr!=NULL){
 	 inorderView(curr->left,viewKey,viewData);
-	 printf("Data \n");
+	 printf("\n");
+	 printf("Data : ");
 	 viewData(curr->data);
-	 printf("Key \n");
+	 printf("Key : ");
 	 viewKey(curr->key);
+	  printf("\n");
 	 inorderView(curr->right,viewKey,viewData);
 	}
 }
