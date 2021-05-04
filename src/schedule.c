@@ -440,7 +440,7 @@ static long OLSumWjFj(const OList* scheduledTasks) {
 static long BSTSumWjFj(const BSTNode* curr) {
 	/* A Verifier */
 		if(curr!=NULL){
-			long Somme;
+			long Somme=0;
 			Task *currTask=curr->data;
 			long Cj=currTask->processingTime+*(int*)curr->key;
 			long Fj=Cj-currTask->releaseTime;
@@ -449,9 +449,8 @@ static long BSTSumWjFj(const BSTNode* curr) {
 			return Somme;
 	}
 	return 0;
-	exit(-1);
 }
-// 
+//
 // long Somme;
 // Task *currTask=curr->data;
 // long Cj=currTask->processingTime+*(int*)curr->key;
@@ -509,7 +508,7 @@ static long OLSumWjTj(const OList* scheduledTasks) {
 static long BSTSumWjTj(const BSTNode* curr) {
 	/* A Verifier */
 		if(curr!=NULL){
-			long Somme;
+			long Somme=0;
 			Task *currTask=(Task*)curr->data;
 			long Cj=currTask->processingTime+*(int*)curr->key;
 			long Tj=max(0,Cj-currTask->deadline);
