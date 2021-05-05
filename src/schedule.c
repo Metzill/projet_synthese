@@ -159,39 +159,28 @@ static int OLFindStartingTime(const OList *scheduledTasks, const Task* task, int
 static int BSTFindBackfillingPosition(const BSTree* scheduledTasks,const BSTNode* curr, const Task* task) {
 	  assert(scheduledTasks->numelm > 0);
 		if(curr!=NULL){
-		//	scheduledTasks->viewData(curr->data);
 			int left=BSTFindBackfillingPosition(scheduledTasks,curr->left,task);
 			int cBefore;
 			BSTNode* pred=findPredecessor(scheduledTasks,curr);
-
-			if(left !=-1)
-				return left;
-
-			Task *predT=pred->data;
-
-			if(pred->key == curr->key)
+			if(pred==curr)
 				cBefore=0;
-			else
-				cBefore=predT->releaseTime+*(int*)pred->key;
-
-			int releaseTime=max(task->releaseTime,cBefore);
-			int cTask = releaseTime + task->processingTime;
-
-			int currKey=*(int*)curr->key;
-			//
-			// printf("Key de pred : %d\n",*(int*) pred->key);
-			// printf("Key de curr : %d\n",currKey);
-			// printf(" task a inserer : ");
-			// scheduledTasks->viewData(task);
-			// printf("Cbefore : %d\n",cBefore);
-
-			if(cTask<=currKey)
-				return releaseTime;
+			else{
+				Task* predT=pred->data;
+				cBefore=*(int*)pred->key+predT->processingTime;
+			}
+			int releaseTime=max(cBefore,task->releaseTime);
+			int processingTime=releaseTime+task->processingTime;
+			int startingTimeCurr=*(int*)curr->key;
 
 			int right=BSTFindBackfillingPosition(scheduledTasks,curr->right,task);
 
-			if(right !=-1)
+			if(left!=-1)
+				return left;
+			if(right!=-1)
 				return right;
+
+			if(processingTime<=startingTimeCurr)
+				return releaseTime;
 
 			return -1;
 		}
@@ -210,13 +199,14 @@ static int BSTFindStartingTime(const BSTree *scheduledTasks, const Task* task, i
 	if(scheduledTasks->numelm==0)
 		return task->releaseTime;
 	BSTNode *node = BSTMax(scheduledTasks->root);
-	int* keyMax = (int*) node->key;
+	int keyMax = *(int*) node->key;
 	Task *tailTask = node->data;
+
 	int startingTime;
 	if (backfilling)
 			startingTime = BSTFindBackfillingPosition(scheduledTasks,scheduledTasks->root,task);
 	if (!backfilling || startingTime == -1){
-			return max((*keyMax + tailTask->processingTime), task->releaseTime);
+			return max((keyMax + tailTask->processingTime), task->releaseTime);
 	}else {
 			return startingTime;
 	}

@@ -12,7 +12,7 @@
 
 int main(int argv, char *argc[]) {
  Instance I = readInstance("./data/exemple");
- reorderInstance(I, BST, SPT);
+ reorderInstance(I, BST, LPT);
  //viewInstance(I);
     // int data1=30;
     // int* ptrData1=&data1;
