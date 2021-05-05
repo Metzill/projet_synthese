@@ -160,6 +160,8 @@ static int BSTFindBackfillingPosition(const BSTree* scheduledTasks,const BSTNode
 	  assert(scheduledTasks->numelm > 0);
 		if(curr!=NULL){
 			int left=BSTFindBackfillingPosition(scheduledTasks,curr->left,task);
+			if(left!=-1)
+				return left;
 			int cBefore;
 			BSTNode* pred=findPredecessor(scheduledTasks,curr);
 			if(pred==curr)
@@ -174,8 +176,6 @@ static int BSTFindBackfillingPosition(const BSTree* scheduledTasks,const BSTNode
 
 			int right=BSTFindBackfillingPosition(scheduledTasks,curr->right,task);
 
-			if(left!=-1)
-				return left;
 			if(right!=-1)
 				return right;
 
