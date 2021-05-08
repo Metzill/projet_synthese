@@ -61,6 +61,13 @@ static BSTNode* insertBSTNode(BSTNode* curr, void* key, void* data, int (*precee
  }
 }
 
+int hauteur(BSTNode* curr){
+	if(curr==NULL)
+		return 0;
+	else
+		return max(hauteur(curr->left),hauteur(curr->right))+1;
+}
+
 /**
  * NB : Utiliser la fonction récursive insertBSTNode.
  */
@@ -133,26 +140,8 @@ static BSTNode* rotateLeft(BSTNode* y) {
 	x->left=y;
 	int by=y->bfactor;
 	int byright=x->bfactor;
-
-	if(by==-2 && byright==-1){
-		y->bfactor=0;
-		x->bfactor=0;
-	}
-	else if(by==-1 && byright==1){
-		y->bfactor=0;
-		x->bfactor=2;
-	}
-	else if(by==-1 && byright==-1){
-		y->bfactor=1;
-		x->bfactor=1;
-	}
-	else if(by==-1 && byright==0){
-		y->bfactor=0;
-		x->bfactor=1;
-	}else if(by==-2 && byright==-2){
-		y->bfactor=1;
-		x->bfactor=0;
-	}
+	x->bfactor=hauteur(x->left)-hauteur(x->right);
+	y->bfactor=hauteur(y->left)-hauteur(y->right);
 
 }
 
@@ -175,36 +164,10 @@ static BSTNode* rotateRight(BSTNode* y) {
 	BSTNode* x=y->left;
 	y->left=x->right;
 	x->right=y;
-	int by=y->bfactor;
-	int byleft=x->bfactor;
-
-	if(by==2 && byleft==1){
-		y->bfactor=0;
-		x->bfactor=0;
-	}
-	else if(by==1 && byleft==1){
-		y->bfactor=-1;
-		x->bfactor=-1;
-	}
-	else if(by==1 && byleft==-1){
-		y->bfactor=0;
-		x->bfactor=-2;
-	}
-	else if(by==1 && byleft==0){
-		y->bfactor=0;
-		x->bfactor=-1;
-	}else if(by==2 && byleft==2){
-		y->bfactor=-1;
-		x->bfactor=0;
-	}
+	x->bfactor=hauteur(x->left)-hauteur(x->right);
+	y->bfactor=hauteur(y->left)-hauteur(y->right);
 }
 
-int hauteur(BSTNode* curr){
-	if(curr==NULL)
-		return 0;
-	else
-		return max(hauteur(curr->left),hauteur(curr->right))+1;
-}
 /**
  * @brief
  * Insérer un nouveau nœud de clé key et donnée data
@@ -214,59 +177,42 @@ int hauteur(BSTNode* curr){
  * N'oubliez pas à faire les rotations nécessaires (4 cas à considérer).
  * NB : fonction récursive.
  */
-static BSTNode* insertEBSTNode(BSTNode* curr, void* key, void* data, int (*preceed)(const void*, const void*)) {
-	if(curr==NULL)
-		return newBSTNode(key,data);
-	if(preceed(key,curr->key)){
-		//old bfactor Save
-		int oldBfLeft;
-		if(curr->left!=NULL)
-			 oldBfLeft=curr->left->bfactor;
-		else
-			oldBfLeft=0;
+static BSTNode* insertEBSTNode(BSTNode* node, void* key, void* data, int (*preceed)(const void*, const void*)) {
+	if (node == NULL)
+	        return(newEBSTNode(key,data));
 
-		curr->left=insertEBSTNode(curr->left,key,data,preceed);
-		//test increment
-	}else if(!preceed(key,curr->key)){
-		//old bfactor Save
-		int oldBfRight;
-		if(curr->left!=NULL)
-			 oldBfRight=curr->left->bfactor;
-		else
-			oldBfRight=0;
+	    if (preceed(key,node->key))
+	        node->left  = insertEBSTNode(node->left, key,data,preceed);
+	    else if (preceed(node->key,key))
+	        node->right = insertEBSTNode(node->right, key,data,preceed);
+	    else // Equal keys are not allowed in BST
+	        return node;
 
-		curr->right=insertEBSTNode(curr->right,key,data,preceed);
-		//test increment
-  }else{
- 		error("On insère une deuxième fois cette clé");
-	}
+	    int balance = node->bfactor;
 
-	int bfactor=curr->bfactor;
- 	if (bfactor > 1 && preceed(key,curr->left->key))
-        return rotateRight(curr);
+	    // Left Left Case
+	    if (balance > 1 && preceed(key,node->left->key))
+	        return rotateRight(node);
 
+	    // Right Right Case
+	    if (balance < -1 && preceed(node->right->key,key))
+	        return rotateLeft(node);
 
-  // Right Right Case
-  if (bfactor < -1 && !preceed(key,curr->right->key))
-      return rotateLeft(curr);
+	    // Left Right Case
+	    if (balance > 1 && preceed(node->left->key,key))
+	    {
+	        node->left =  rotateLeft(node->left);
+	        return rotateLeft(node);
+	    }
 
-  // Left Right Case
-  if (bfactor > 1 && !preceed(key,curr->left->key))
-  {
-      rotateLeft(curr->left);
-      return rotateRight(curr);
-  }
+	    // Right Left Case
+	    if (balance < -1 && preceed(key,node->right->key))
+	    {
+	        node->right = rotateRight(node->right);
+	        return rotateLeft(node);
+	    }
 
-  // Right Left Case
-  if (bfactor < -1 && preceed(key,curr->right->key))
-  {
-      rotateRight(curr->right);
-      return rotateLeft(curr);
-  }
-
-	curr->bfactor=hauteur(curr->left)-hauteur(curr->right);
-
-	return curr;
+	    return node;
 }
 
 /**

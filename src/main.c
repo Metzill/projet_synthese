@@ -12,7 +12,7 @@
 
 int main(int argv, char *argc[]) {
  Instance I = readInstance("./data/exemple");
- reorderInstance(I, BST, LPT);
+ reorderInstance(I, EBST, LPT);
  //viewInstance(I);
     // int data1=30;
     // int* ptrData1=&data1;
@@ -51,26 +51,26 @@ int main(int argv, char *argc[]) {
 	// printf("SumWjTj=%ld\n", SumWjTj(SOL));
 	// freeSchedule(SOL);
 
-	Schedule *SBST = newSchedule(BST, 1);
-	computeSchedule(SBST, I);
-	viewSchedule(SBST);
-	saveSchedule(SBST, "./data/output_BST");
-	printf("Makespan=%ld\n", makespan(SBST));
-	printf("SumWjCj=%ld\n", SumWjCj(SBST));
-	printf("SumWjFj=%ld\n", SumWjFj(SBST));
-	printf("SumWjTj=%ld\n", SumWjTj(SBST));
-	freeSchedule(SBST);
+	// Schedule *SBST = newSchedule(BST, 1);
+	// computeSchedule(SBST, I);
+	// viewSchedule(SBST);
+	// saveSchedule(SBST, "./data/output_BST");
+	// printf("Makespan=%ld\n", makespan(SBST));
+	// printf("SumWjCj=%ld\n", SumWjCj(SBST));
+	// printf("SumWjFj=%ld\n", SumWjFj(SBST));
+	// printf("SumWjTj=%ld\n", SumWjTj(SBST));
+	// freeSchedule(SBST);
 
-	// Schedule *SEBST = newSchedule(EBST, 1);
-	// computeSchedule(SEBST, I);
-	// viewSchedule(SEBST);
-	// saveSchedule(SEBST, "./data/output_EBST");
-	// printf("Makespan=%ld\n", makespan(SEBST));
-	// printf("SumWjCj=%ld\n", SumWjCj(SEBST));
-	// printf("SumWjFj=%ld\n", SumWjFj(SEBST));
-	// printf("SumWjTj=%ld\n", SumWjTj(SEBST));
-	// freeSchedule(SEBST);
-	//
+	Schedule *SEBST = newSchedule(EBST, 1);
+	computeSchedule(SEBST, I);
+	viewSchedule(SEBST);
+	saveSchedule(SEBST, "./data/output_EBST");
+	printf("Makespan=%ld\n", makespan(SEBST));
+	printf("SumWjCj=%ld\n", SumWjCj(SEBST));
+	printf("SumWjFj=%ld\n", SumWjFj(SEBST));
+	printf("SumWjTj=%ld\n", SumWjTj(SEBST));
+	freeSchedule(SEBST);
+
 	 freeInstance(I, 1);
 
 	return EXIT_SUCCESS;
