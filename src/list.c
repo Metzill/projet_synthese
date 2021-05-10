@@ -152,7 +152,7 @@ LNode* listRemoveNode(List * L, LNode * node) {
 
 	if(L->tail==node)
 		L->tail=node->pred;
-	if(L->head==node);
+	if(L->head==node)
 	  L->head=node->succ;
 
 	L->numelm--;

@@ -173,14 +173,15 @@ static int BSTFindBackfillingPosition(const BSTree* scheduledTasks,const BSTNode
 			int releaseTime=max(cBefore,task->releaseTime);
 			int processingTime=releaseTime+task->processingTime;
 			int startingTimeCurr=*(int*)curr->key;
-
 			int right=BSTFindBackfillingPosition(scheduledTasks,curr->right,task);
+
+			if(processingTime<=startingTimeCurr)
+				return releaseTime;
 
 			if(right!=-1)
 				return right;
 
-			if(processingTime<=startingTimeCurr)
-				return releaseTime;
+
 
 			return -1;
 		}
@@ -333,6 +334,7 @@ long makespan(const Schedule * sched) {
             break;
         default:
             error("Schedule:saveSchedule : invalid data structure.");
+						return 0;
             break;
     }
 }

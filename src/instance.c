@@ -164,7 +164,7 @@ static int fcfs(const void *a, const void *b) {
     Task *tb = (Task *) b;
 
     if ((ta->releaseTime < tb->releaseTime)
-        || (ta->releaseTime == tb->releaseTime) && (ta->processingTime > tb->processingTime)) {
+        || ((ta->releaseTime == tb->releaseTime) && (ta->processingTime > tb->processingTime))) {
         return 1;
     } else {
         return 0;
