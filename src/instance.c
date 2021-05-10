@@ -218,7 +218,6 @@ void reorderInstance(Instance I, DataStructure structtype, Order order) {
                 node = node->succ;
             }
             I->head=BSTreeToList(bst)->head;
-            viewBSTree(bst);
             freeBSTree(bst,0,0);
             break;
 			case EBST:

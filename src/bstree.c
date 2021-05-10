@@ -53,21 +53,33 @@ static BSTNode* insertBSTNode(BSTNode* curr, void* key, void* data, int (*precee
 	if(curr==NULL)
 		return newBSTNode(key,data);
 	if(preceed(curr->key,key)){
-		curr->left=insertBSTNode(curr->left,key,data,preceed);
-		return curr;
-	}else{
 		curr->right=insertBSTNode(curr->right,key,data,preceed);
 		return curr;
+	}else{
+		curr->left=insertBSTNode(curr->left,key,data,preceed);
+		return curr;
  }
+}
+
+int hauteur(BSTNode* curr){
+	if(curr==NULL)
+		return 0;
+	else
+		return max(hauteur(curr->left),hauteur(curr->right))+1;
 }
 
 /**
  * NB : Utiliser la fonction récursive insertBSTNode.
  */
 void BSTreeInsert(BSTree* T, void* key, void* data) {
-	T->root=insertBSTNode(T->root,key,data,T->preceed);
+	if(T->numelm==0){
+		T->root=newBSTNode(key,data);
+		}
+	else{
+		BSTNode *root=insertBSTNode(T->root,key,data,T->preceed);
+		T->root=root;
+	}
 	T->numelm++;
-
 }
 
 /*********************************************************************
@@ -128,26 +140,8 @@ static BSTNode* rotateLeft(BSTNode* y) {
 	x->left=y;
 	int by=y->bfactor;
 	int byright=x->bfactor;
-
-	if(by==-2 && byright==-1){
-		y->bfactor=0;
-		x->bfactor=0;
-	}
-	else if(by==-1 && byright==1){
-		y->bfactor=0;
-		x->bfactor=2;
-	}
-	else if(by==-1 && byright==-1){
-		y->bfactor=1;
-		x->bfactor=1;
-	}
-	else if(by==-1 && byright==0){
-		y->bfactor=0;
-		x->bfactor=1;
-	}else if(by==-2 && byright==-2){
-		y->bfactor=1;
-		x->bfactor=0;
-	}
+	x->bfactor=hauteur(x->left)-hauteur(x->right);
+	y->bfactor=hauteur(y->left)-hauteur(y->right);
 
 }
 
@@ -170,36 +164,10 @@ static BSTNode* rotateRight(BSTNode* y) {
 	BSTNode* x=y->left;
 	y->left=x->right;
 	x->right=y;
-	int by=y->bfactor;
-	int byleft=x->bfactor;
-
-	if(by==2 && byleft==1){
-		y->bfactor=0;
-		x->bfactor=0;
-	}
-	else if(by==1 && byleft==1){
-		y->bfactor=-1;
-		x->bfactor=-1;
-	}
-	else if(by==1 && byleft==-1){
-		y->bfactor=0;
-		x->bfactor=-2;
-	}
-	else if(by==1 && byleft==0){
-		y->bfactor=0;
-		x->bfactor=-1;
-	}else if(by==2 && byleft==2){
-		y->bfactor=-1;
-		x->bfactor=0;
-	}
+	x->bfactor=hauteur(x->left)-hauteur(x->right);
+	y->bfactor=hauteur(y->left)-hauteur(y->right);
 }
 
-int hauteur(BSTNode* curr){
-	if(curr==NULL)
-		return 0;
-	else
-		return max(hauteur(curr->left),hauteur(curr->right))+1;
-}
 /**
  * @brief
  * Insérer un nouveau nœud de clé key et donnée data
@@ -209,59 +177,42 @@ int hauteur(BSTNode* curr){
  * N'oubliez pas à faire les rotations nécessaires (4 cas à considérer).
  * NB : fonction récursive.
  */
-static BSTNode* insertEBSTNode(BSTNode* curr, void* key, void* data, int (*preceed)(const void*, const void*)) {
-	if(curr==NULL)
-		return newBSTNode(key,data);
-	if(preceed(key,curr->key)){
-		//old bfactor Save
-		int oldBfLeft;
-		if(curr->left!=NULL)
-			 oldBfLeft=curr->left->bfactor;
-		else
-			oldBfLeft=0;
+static BSTNode* insertEBSTNode(BSTNode* node, void* key, void* data, int (*preceed)(const void*, const void*)) {
+	if (node == NULL)
+	        return(newEBSTNode(key,data));
 
-		curr->left=insertEBSTNode(curr->left,key,data,preceed);
-		//test increment
-	}else if(!preceed(key,curr->key)){
-		//old bfactor Save
-		int oldBfRight;
-		if(curr->left!=NULL)
-			 oldBfRight=curr->left->bfactor;
-		else
-			oldBfRight=0;
+	    if (preceed(key,node->key))
+	        node->left  = insertEBSTNode(node->left, key,data,preceed);
+	    else if (preceed(node->key,key))
+	        node->right = insertEBSTNode(node->right, key,data,preceed);
+	    else // Equal keys are not allowed in BST
+	        return node;
 
-		curr->right=insertEBSTNode(curr->right,key,data,preceed);
-		//test increment
-  }else{
- 		error("On insère une deuxième fois cette clé");
-	}
+	    int balance = node->bfactor;
 
-	int bfactor=curr->bfactor;
- 	if (bfactor > 1 && preceed(key,curr->left->key))
-        return rotateRight(curr);
+	    // Left Left Case
+	    if (balance > 1 && preceed(key,node->left->key))
+	        return rotateRight(node);
 
+	    // Right Right Case
+	    if (balance < -1 && preceed(node->right->key,key))
+	        return rotateLeft(node);
 
-  // Right Right Case
-  if (bfactor < -1 && !preceed(key,curr->right->key))
-      return rotateLeft(curr);
+	    // Left Right Case
+	    if (balance > 1 && preceed(node->left->key,key))
+	    {
+	        node->left =  rotateLeft(node->left);
+	        return rotateLeft(node);
+	    }
 
-  // Left Right Case
-  if (bfactor > 1 && !preceed(key,curr->left->key))
-  {
-      rotateLeft(curr->left);
-      return rotateRight(curr);
-  }
+	    // Right Left Case
+	    if (balance < -1 && preceed(key,node->right->key))
+	    {
+	        node->right = rotateRight(node->right);
+	        return rotateLeft(node);
+	    }
 
-  // Right Left Case
-  if (bfactor < -1 && preceed(key,curr->right->key))
-  {
-      rotateRight(curr->right);
-      return rotateLeft(curr);
-  }
-
-	curr->bfactor=hauteur(curr->left)-hauteur(curr->right);
-
-	return curr;
+	    return node;
 }
 
 /**
@@ -326,8 +277,12 @@ void freeBSTree(BSTree* T, int deleteKey, int deleteData) {
 static void inorderView(BSTNode *curr, void (*viewKey)(const void*), void (*viewData)(const void*)) {
 	if (curr!=NULL){
 	 inorderView(curr->left,viewKey,viewData);
+	 printf("\n");
+	 printf("Data : ");
 	 viewData(curr->data);
+	 printf("Key : ");
 	 viewKey(curr->key);
+	  printf("\n");
 	 inorderView(curr->right,viewKey,viewData);
 	}
 }
@@ -367,33 +322,20 @@ List* BSTreeToList(const BSTree* T) {
 
 BSTNode* BSTMin(BSTNode* node) {
 	assert(node != NULL);
-
-	BSTNode* tempoG=BSTMin(node->left);
-	BSTNode* tempoD=BSTMin(node->right);
-	BSTNode* petit=node;
-
-	if(petit->key>tempoG->key)
-		petit=tempoG;
-	if(petit->key>tempoD->key)
-		petit=tempoD;
-
-	return petit;
+ if(node->left==NULL)
+ 	return node;
+else
+	return BSTMax(node->left);
 
 }
 
 BSTNode* BSTMax(BSTNode* node) {
-	assert(node != NULL);
+    assert(node != NULL);
+ if(node->right==NULL)
+ 	return node;
+else
+	return BSTMax(node->right);
 
-	BSTNode* tempoG=BSTMin(node->left);
-	BSTNode* tempoD=BSTMin(node->right);
-	BSTNode* grand=node;
-
-	if(grand->key<tempoG->key)
-		grand=tempoG;
-	if(grand->key<tempoD->key)
-		grand=tempoD;
-
-	return grand;
 }
 
 /**
@@ -405,19 +347,19 @@ BSTNode* BSTMax(BSTNode* node) {
  */
 static BSTNode* predecessor(BSTNode* curr, void* key, int (*preceed)(const void*, const void*)) {
 	assert(curr != NULL);
+	BSTNode* save=NULL;
+	BSTNode* res;
 
-	BSTNode* tempoG=predecessor(curr->left,key,preceed);
-	BSTNode* tempoD=predecessor(curr->right,key,preceed);
-
-	if(preceed(curr->key,key)==1)
-		return curr;
-	else if (tempoG!=NULL)
-		return tempoG;
-	else if (tempoD!=NULL)
-		return tempoD;
-	else
-		return NULL;
-
+	if(preceed(curr->key,key)){
+         save=curr;
+		 res=predecessor(curr->right,key,preceed);
+	}else if(preceed(key,curr->key)){
+		res=predecessor(curr->left,key,preceed);
+	}
+	else {
+		return curr->left != NULL ? BSTMax(curr->left) : curr;
+	}
+	return save!=NULL && !(preceed(res->key,key) || preceed(key,res->key)) ? save : res;
 
 }
 
@@ -439,19 +381,21 @@ BSTNode * findPredecessor(const BSTree * T, const BSTNode* node) {
  * NB : fonction récursive.
  */
 static BSTNode* successor(BSTNode* curr, void* key, int (*preceed)(const void*, const void*)) {
-	assert(curr != NULL);
-	/* A FAIRE */
-	BSTNode* tempoG=successor(curr->left,key,preceed);
-	BSTNode* tempoD=successor(curr->right,key,preceed);
+    assert(curr != NULL);
+    BSTNode* save=NULL;
+    BSTNode* res;
 
-	if(preceed(curr->key,key)==0)
-		return curr;
-	else if (tempoG!=NULL)
-		return tempoG;
-	else if (tempoD!=NULL)
-		return tempoD;
-	else
-		return NULL;
+    if(preceed(curr->key,key)){
+        res=successor(curr->right,key,preceed);
+    }else if(preceed(key,curr->key)){
+        save=curr;
+        res=successor(curr->left,key,preceed);
+    }
+    else {
+        return curr->right != NULL ? BSTMin(curr->right) : curr;
+    }
+    return save!=NULL && !(preceed(res->key,key) || preceed(key,res->key)) ? save : res;
+
 }
 
 /**
@@ -461,5 +405,5 @@ BSTNode * findSuccessor(const BSTree * T, const BSTNode* node) {
 	assert(T->root != NULL);
 	assert(node != NULL);
 
-	return predecessor(T->root,node->key,T->preceed);
+	return successor(T->root,node->key,T->preceed);
 }
