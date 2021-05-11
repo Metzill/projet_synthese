@@ -5,6 +5,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import java.util.Objects;
+import controlleur.*;
 
 
 public class main extends Application {
@@ -16,7 +17,6 @@ public class main extends Application {
             Scene scene = new Scene(root);
             primaryStage.setScene(scene);
             primaryStage.setTitle("Fenetre Nice");
-            primaryStage.setResizable(false);
             primaryStage.show();
         } catch(Exception e) {
             e.printStackTrace();

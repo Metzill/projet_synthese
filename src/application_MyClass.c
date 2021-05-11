@@ -37,7 +37,7 @@ JNIEXPORT void JNICALL Java_application_MyClass_getSchedule
     reorderInstance(I, typeStruct, ordre);
     Schedule *SEBST = newSchedule(typeStruct, 1);
     computeSchedule(SEBST, I);
-    viewSchedule(SEBST);
+    //viewSchedule(SEBST);
     saveSchedule(SEBST, outFileNamechar);
 //    printf("Makespan=%ld\n", makespan(SEBST));
 //    printf("SumWjCj=%ld\n", SumWjCj(SEBST));

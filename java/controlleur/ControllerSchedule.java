@@ -82,14 +82,18 @@ public class ControllerSchedule {
             case "BST":dataType=2;break;
             case "EBST":dataType=3;break;
         }
+        MyClass my=new MyClass();
 
-        System.out.println(dataType+"/"+ordre);
-
+        if(chckBoxBackfilling.isSelected()){
+          this.Backfilling=1;
+        }else
+          this.Backfilling=0;
+        my.getSchedule("../data/Input/"+cmbBoxInputFile.getValue(),"../data/Output/"+cmbBoxOutputFile.getValue(),dataType,ordre,Backfilling);
     }
 
     public void initialize(){
-        listFilesForFolder(new File("data/Input"),listeInput);
-        listFilesForFolder(new File("data/Output"),listeOutput);
+        listFilesForFolder(new File("../data/Input"),listeInput);
+        listFilesForFolder(new File("../data/Output"),listeOutput);
         cmbBoxInputFile.getItems().addAll(listeInput);
         cmbBoxOutputFile.getItems().addAll(listeOutput);
 
