@@ -253,7 +253,7 @@ static void OLSaveSchedule(const OList* scheduledTasks, FILE* fd) {
     OLNode *node = scheduledTasks->head;
     while (node != NULL) {
         Task *currTask = node->data;
-        fprintf(fd,"%s %d %d %d %d\n",currTask->id, currTask->processingTime, currTask->releaseTime, currTask->deadline, currTask->weight);
+        fprintf(fd,"%s %d %d %d %d %d\n",currTask->id,*(int*) node->key, currTask->processingTime, currTask->releaseTime, currTask->deadline, currTask->weight);
         node = node->succ;
     }
 }
@@ -269,7 +269,7 @@ static void BSTSaveSchedule(const BSTNode* curr, FILE* fd) {
 	if(curr != NULL) {
         BSTSaveSchedule(curr->left,fd);
         Task *currTask = curr->data;
-        fprintf(fd,"%s %d %d %d %d\n",currTask->id, currTask->processingTime, currTask->releaseTime, currTask->deadline, currTask->weight);
+        fprintf(fd,"%s %d %d %d %d %d\n",currTask->id,*(int*) curr->key, currTask->processingTime, currTask->releaseTime, currTask->deadline, currTask->weight);
         BSTSaveSchedule(curr->right,fd);
 	}
 

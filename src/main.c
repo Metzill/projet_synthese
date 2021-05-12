@@ -11,8 +11,9 @@
 #include "schedule.h"
 
 int main(int argv, char *argc[]) {
- Instance I = readInstance("./data/exemple");
- reorderInstance(I, EBST, LPT);
+  printf("je vais read \n");
+ Instance I = readInstance("./data/Input/instance_0500_1");
+ reorderInstance(I, OL, SPT);
  //viewInstance(I);
     // int data1=30;
     // int* ptrData1=&data1;
@@ -40,16 +41,15 @@ int main(int argv, char *argc[]) {
     //T->viewData(T->root->left->right->data);
     // printf("\n");
     // T->viewData(findSuccessor(T,T->root->left)->data);
-
-	// Schedule *SOL = newSchedule(OL, 1);
-	// computeSchedule(SOL, I);
-	// viewSchedule(SOL);
-	// saveSchedule(SOL, "./data/output_OL");
-	// printf("Makespan=%ld\n", makespan(SOL));
-	// printf("SumWjCj=%ld\n", SumWjCj(SOL));
-	// printf("SumWjFj=%ld\n", SumWjFj(SOL));
-	// printf("SumWjTj=%ld\n", SumWjTj(SOL));
-	// freeSchedule(SOL);
+	Schedule *SOL = newSchedule(OL, 1);
+	computeSchedule(SOL, I);
+	viewSchedule(SOL);
+	saveSchedule(SOL, "./data/output_OL");
+	printf("Makespan=%ld\n", makespan(SOL));
+	printf("SumWjCj=%ld\n", SumWjCj(SOL));
+	printf("SumWjFj=%ld\n", SumWjFj(SOL));
+	printf("SumWjTj=%ld\n", SumWjTj(SOL));
+	freeSchedule(SOL);
 
 	// Schedule *SBST = newSchedule(BST, 1);
 	// computeSchedule(SBST, I);
@@ -61,15 +61,15 @@ int main(int argv, char *argc[]) {
 	// printf("SumWjTj=%ld\n", SumWjTj(SBST));
 	// freeSchedule(SBST);
 
-	Schedule *SEBST = newSchedule(EBST, 1);
-	computeSchedule(SEBST, I);
-	viewSchedule(SEBST);
-	saveSchedule(SEBST, "./data/output_EBST");
-	printf("Makespan=%ld\n", makespan(SEBST));
-	printf("SumWjCj=%ld\n", SumWjCj(SEBST));
-	printf("SumWjFj=%ld\n", SumWjFj(SEBST));
-	printf("SumWjTj=%ld\n", SumWjTj(SEBST));
-	freeSchedule(SEBST);
+	// Schedule *SEBST = newSchedule(EBST, 1);
+	// computeSchedule(SEBST, I);
+	// viewSchedule(SEBST);
+	// saveSchedule(SEBST, "./data/output_EBST");
+	// printf("Makespan=%ld\n", makespan(SEBST));
+	// printf("SumWjCj=%ld\n", SumWjCj(SEBST));
+	// printf("SumWjFj=%ld\n", SumWjFj(SEBST));
+	// printf("SumWjTj=%ld\n", SumWjTj(SEBST));
+	// freeSchedule(SEBST);
 
 	 freeInstance(I, 1);
 

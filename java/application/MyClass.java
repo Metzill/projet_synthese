@@ -13,8 +13,6 @@ public class MyClass {
     //Commande pour executer le java depuis le dossier java : java -Djava.library.path=. application.MyClass
     //Commande pour compiler le java  javac --module-path /usr/lib/jvm/javafx-sdk-11.0.2/lib --add-modules javafx.fxml,javafx.controls,javafx.graphics application/main.java
     // Commande pour executer le java depuis le dossier javaFx :  java -Djava.library.path=. --module-path /usr/lib/jvm/javafx-sdk-11.0.2/lib --add-modules javafx.fxml,javafx.controls,javafx.graphics application.main
-
-
     static {
         System.loadLibrary("mylibrary");
     }

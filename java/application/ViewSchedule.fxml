@@ -6,12 +6,11 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
-
 
 <VBox prefHeight="800.0" prefWidth="1080.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controlleur.ControllerSchedule">
   <children>
@@ -19,7 +18,7 @@
          <children>
             <VBox prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <children>
-                  <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="200.0">
+                  <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0">
                      <children>
                         <HBox alignment="CENTER" spacing="10.0">
                            <children>
@@ -33,6 +32,12 @@
                               <ComboBox fx:id="cmbBoxOutputFile" prefWidth="150.0" />
                            </children>
                         </HBox>
+                        <Label text="Décoché la bar pour de trop grande instance" wrapText="true">
+                           <HBox.margin>
+                              <Insets right="10.0" />
+                           </HBox.margin>
+                        </Label>
+                        <CheckBox fx:id="chckBoxEchelle" mnemonicParsing="false" text="Bar" />
                      </children>
                   </HBox>
                   <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="200.0">
@@ -70,10 +75,9 @@
                               </VBox>
                            </children>
                         </HBox>
-                        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="290.0" spacing="10.0">
+                        <HBox fx:id="chckBoxBar" alignment="CENTER" prefHeight="100.0" prefWidth="290.0" spacing="10.0">
                            <children>
-                              <Label text="Backfilling" />
-                              <CheckBox fx:id="chckBoxBackfilling" mnemonicParsing="false" text="CheckBox" />
+                              <CheckBox fx:id="chckBoxBackfilling" mnemonicParsing="false" text="Backfilling" />
                            </children>
                         </HBox>
                      </children>
@@ -92,11 +96,16 @@
                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                      </padding>
                   </HBox>
-                  <Pane fx:id="paneResulsts" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+                  <Label fx:id="lblErreur" alignment="CENTER" textFill="RED">
+                     <VBox.margin>
+                        <Insets left="50.0" />
+                     </VBox.margin>
+                  </Label>
+                  <ScrollPane fx:id="paneResulsts" prefHeight="450.0" prefWidth="200.0">
                      <VBox.margin>
                         <Insets bottom="50.0" left="50.0" right="50.0" top="50.0" />
                      </VBox.margin>
-                  </Pane>
+                  </ScrollPane>
                </children>
             </VBox>
          </children>

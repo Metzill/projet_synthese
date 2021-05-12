@@ -16,6 +16,7 @@ JNIEXPORT void JNICALL Java_application_MyClass_getSchedule
   (JNIEnv * env, jobject obj, jstring inFile, jstring outFile, jint structType, jint order, jint backfilling){
     char *inFileNamechar = (char*)(*env)->GetStringUTFChars(env, inFile, NULL);
     char *outFileNamechar = (char*)(*env)->GetStringUTFChars(env, outFile, NULL);
+
     Instance I = readInstance(inFileNamechar);
     Order ordre;
     DataStructure typeStruct;
@@ -35,7 +36,7 @@ JNIEXPORT void JNICALL Java_application_MyClass_getSchedule
     }
 
     reorderInstance(I, typeStruct, ordre);
-    Schedule *SEBST = newSchedule(typeStruct, 1);
+    Schedule *SEBST = newSchedule(typeStruct, backfilling);
     computeSchedule(SEBST, I);
     //viewSchedule(SEBST);
     saveSchedule(SEBST, outFileNamechar);
