@@ -50,21 +50,6 @@ void viewTask(const void *task) {
  ************************************************/
 
 Instance readInstance(char *filename) {
-    // FILE * ptrFichier = fopen( filename,"r" ) ;
-    // if( ! ptrFichier )
-    //     error("readInstance() : echec d'ouverture du fichier" );
-    // Instance newInstance = newList( &viewTask, &freeTask );
-    // char idBuffer [10];
-    // int processBuff;
-    // int releaseBuffer ;
-    // int deadLineBuffer;
-    // int weightBuffer;
-    // while( fscanf ( ptrFichier,"%s %d %d %d %d", idBuffer, &processBuff, &releaseBuffer, &deadLineBuffer, &weightBuffer ) != EOF ) {
-    //     Task * task = newTask( idBuffer, processBuff, releaseBuffer, deadLineBuffer, weightBuffer );
-    //     listInsertFirst( newInstance, ( void * ) task );
-    // }
-    // fclose( ptrFichier );
-    // return newInstance;
     FILE * ptrFichier = fopen( filename,"r" ) ;
     if( ! ptrFichier )
         error("readInstance() : echec d'ouverture du fichier" );
