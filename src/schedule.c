@@ -231,8 +231,6 @@ int findStartingTime(const Schedule *sched, const Task* task) {
 
 void computeSchedule(Schedule *sched, const Instance I) {
 	for (LNode* curr = I->head; curr; curr = curr->succ){
-		// printf("je vais inserer");
-		// I->viewData(curr->data);
 		addTaskToSchedule(sched, findStartingTime(sched, curr->data), curr->data);
 	}
 }
@@ -316,21 +314,18 @@ long makespan(const Schedule * sched) {
             lastTask = tailNode->data;
             lastTaskCompletionTime = *(int*) tailNode->key + lastTask->processingTime; // completion time (date de fin);
             return lastTaskCompletionTime;
-            break;
         case BST:
             bst = sched->scheduledTasks;
             maxNode = BSTMax(bst->root);
             lastTask = maxNode->data;
             lastTaskCompletionTime = *(int*) maxNode->key + lastTask->processingTime; // completion time (date de fin);
             return lastTaskCompletionTime;
-            break;
         case EBST:
             bst = sched->scheduledTasks;
             maxNode = BSTMax(bst->root);
             lastTask = maxNode->data;
             lastTaskCompletionTime = *(int*) maxNode->key + lastTask->processingTime; // completion time (date de fin);
             return lastTaskCompletionTime;
-            break;
         default:
             error("Schedule:saveSchedule : invalid data structure.");
             break;
@@ -345,7 +340,6 @@ long makespan(const Schedule * sched) {
  * représenté par la liste ordonnée scheduledTasks.
  */
 static long OLSumWjCj(const OList* scheduledTasks) {
-	/* A Verifier */
 	long Somme=0;
 	long Cj;
 	OLNode *curr=scheduledTasks->head;
@@ -367,7 +361,6 @@ static long OLSumWjCj(const OList* scheduledTasks) {
  * NB : fonction récursive
  */
 static long BSTSumWjCj(const BSTNode* curr) {
-	/* A Verifier */
 		if(curr!=NULL){
 			long Somme;
 			Task *currTask=curr->data;
@@ -377,20 +370,16 @@ static long BSTSumWjCj(const BSTNode* curr) {
 			return Somme;
 	}
 	return 0;
-	exit(-1);
 }
 
 long SumWjCj(const Schedule* sched) {
 	switch (sched->structtype) {
 	case OL:
 		return OLSumWjCj(sched->scheduledTasks);
-		break;
 	case BST:
 		return BSTSumWjCj(((BSTree*) sched->scheduledTasks)->root);
-		break;
 	case EBST:
 		return BSTSumWjCj(((BSTree*) sched->scheduledTasks)->root);
-		break;
 	default:
 		error("Schedule:SumWjCj : invalid data structure.");
 		return -1;
@@ -405,7 +394,6 @@ long SumWjCj(const Schedule* sched) {
  * représenté par la liste ordonnée scheduledTasks.
  */
 static long OLSumWjFj(const OList* scheduledTasks) {
-	/* A Verifier */
 	long Somme=0;
 	long Cj;
 	long Fj;
@@ -428,7 +416,6 @@ static long OLSumWjFj(const OList* scheduledTasks) {
  * NB : fonction récursive
  */
 static long BSTSumWjFj(const BSTNode* curr) {
-	/* A Verifier */
 		if(curr!=NULL){
 			long Somme=0;
 			Task *currTask=curr->data;
@@ -440,25 +427,15 @@ static long BSTSumWjFj(const BSTNode* curr) {
 	}
 	return 0;
 }
-//
-// long Somme;
-// Task *currTask=curr->data;
-// long Cj=currTask->processingTime+*(int*)curr->key;
-// Somme=Cj*currTask->weight;
-// Somme=Somme + BSTSumWjCj(curr->left)+BSTSumWjCj(curr->right);
-// return Somme;
 
 long SumWjFj(const Schedule* sched) {
 	switch (sched->structtype) {
 	case OL:
 		return OLSumWjFj(sched->scheduledTasks);
-		break;
 	case BST:
 		return BSTSumWjFj(((BSTree*) sched->scheduledTasks)->root);
-		break;
 	case EBST:
 		return BSTSumWjFj(((BSTree*) sched->scheduledTasks)->root);
-		break;
 	default:
 		error("Schedule:SumWjFj : invalid data structure.");
 		return -1;
@@ -473,7 +450,6 @@ long SumWjFj(const Schedule* sched) {
  * représenté par la liste ordonnée scheduledTasks.
  */
 static long OLSumWjTj(const OList* scheduledTasks) {
-	/* A Verifier */
 	long Somme=0;
 	long Cj;
 	long Tj;
@@ -496,7 +472,6 @@ static long OLSumWjTj(const OList* scheduledTasks) {
  * NB : fonction récursive
  */
 static long BSTSumWjTj(const BSTNode* curr) {
-	/* A Verifier */
 		if(curr!=NULL){
 			long Somme=0;
 			Task *currTask=(Task*)curr->data;
@@ -514,13 +489,10 @@ long SumWjTj(const Schedule* sched) {
 	switch (sched->structtype) {
 	case OL:
 		return OLSumWjTj(sched->scheduledTasks);
-		break;
 	case BST:
 		return BSTSumWjTj(((BSTree*) sched->scheduledTasks)->root);
-		break;
 	case EBST:
 		return BSTSumWjTj(((BSTree*) sched->scheduledTasks)->root);
-		break;
 	default:
 		error("Schedule:SumWjTj : invalid data structure.");
 		return -1;

@@ -52,36 +52,6 @@ void viewList(const List * L) {
 
 }
 
-void fonctionTest(){
-	List *fils=newList(*viewInt,*freeInt);
-	int *p=malloc(1 * sizeof(int));
-	*p=9;
-	listInsertLast(fils,p);
-	viewList(fils);
-	printf("\n");
-
-	int *o=malloc(1 * sizeof(int));
-	*o=7;
-	listInsertLast(fils,o);
-	viewList(fils);
-	printf("\n");
-
-	int *m=malloc(1 * sizeof(int));
-	*m=13;
-	LNode *test=fils->head;
-	listInsertAfter(fils,m,test);
-	viewList(fils);
-	printf("\n");
-
-	listRemoveLast(fils);
-	viewList(fils);
-	printf("\n");
-
-	free(p);
-	free(m);
-	free(o);
-}
-
 void listInsertFirst(List * L, void * data) {
 	LNode *first=newLNode(data);
 	first->succ=L->head;
@@ -158,4 +128,34 @@ LNode* listRemoveNode(List * L, LNode * node) {
 	L->numelm--;
 
 	return node;
+}
+
+void fonctionTest(){
+    List *fils=newList(*viewInt,*freeInt);
+    int *p=malloc(1 * sizeof(int));
+    *p=9;
+    listInsertLast(fils,p);
+    viewList(fils);
+    printf("\n");
+
+    int *o=malloc(1 * sizeof(int));
+    *o=7;
+    listInsertLast(fils,o);
+    viewList(fils);
+    printf("\n");
+
+    int *m=malloc(1 * sizeof(int));
+    *m=13;
+    LNode *test=fils->head;
+    listInsertAfter(fils,m,test);
+    viewList(fils);
+    printf("\n");
+
+    listRemoveLast(fils);
+    viewList(fils);
+    printf("\n");
+
+    free(p);
+    free(m);
+    free(o);
 }
