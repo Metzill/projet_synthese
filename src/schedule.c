@@ -173,14 +173,15 @@ static int BSTFindBackfillingPosition(const BSTree* scheduledTasks,const BSTNode
 			int releaseTime=max(cBefore,task->releaseTime);
 			int processingTime=releaseTime+task->processingTime;
 			int startingTimeCurr=*(int*)curr->key;
-
 			int right=BSTFindBackfillingPosition(scheduledTasks,curr->right,task);
+
+			if(processingTime<=startingTimeCurr)
+				return releaseTime;
 
 			if(right!=-1)
 				return right;
 
-			if(processingTime<=startingTimeCurr)
-				return releaseTime;
+
 
 			return -1;
 		}
@@ -250,7 +251,7 @@ static void OLSaveSchedule(const OList* scheduledTasks, FILE* fd) {
     OLNode *node = scheduledTasks->head;
     while (node != NULL) {
         Task *currTask = node->data;
-        fprintf(fd,"%s %d %d %d %d\n",currTask->id, currTask->processingTime, currTask->releaseTime, currTask->deadline, currTask->weight);
+        fprintf(fd,"%s %d %d %d %d %d\n",currTask->id,*(int*) node->key, currTask->processingTime, currTask->releaseTime, currTask->deadline, currTask->weight);
         node = node->succ;
     }
 }
@@ -266,7 +267,7 @@ static void BSTSaveSchedule(const BSTNode* curr, FILE* fd) {
 	if(curr != NULL) {
         BSTSaveSchedule(curr->left,fd);
         Task *currTask = curr->data;
-        fprintf(fd,"%s %d %d %d %d\n",currTask->id, currTask->processingTime, currTask->releaseTime, currTask->deadline, currTask->weight);
+        fprintf(fd,"%s %d %d %d %d %d\n",currTask->id,*(int*) curr->key, currTask->processingTime, currTask->releaseTime, currTask->deadline, currTask->weight);
         BSTSaveSchedule(curr->right,fd);
 	}
 
@@ -328,6 +329,7 @@ long makespan(const Schedule * sched) {
             return lastTaskCompletionTime;
         default:
             error("Schedule:saveSchedule : invalid data structure.");
+						return 0;
             break;
     }
 }

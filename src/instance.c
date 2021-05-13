@@ -50,24 +50,36 @@ void viewTask(const void *task) {
  ************************************************/
 
 Instance readInstance(char *filename) {
-    Instance newInstance = newList(viewTask, freeTask);
-    int lineLength = 16;
-    char line[lineLength];
-    char idS[16];
-    int id, processingTime, releaseTime, deadline, weight;
-    FILE *fp;
-    if ((fp = fopen(filename, "rt")) == NULL) {
-        fprintf(stderr, "Error while opening %s\n", filename);
-        exit(EXIT_FAILURE);
+    // FILE * ptrFichier = fopen( filename,"r" ) ;
+    // if( ! ptrFichier )
+    //     error("readInstance() : echec d'ouverture du fichier" );
+    // Instance newInstance = newList( &viewTask, &freeTask );
+    // char idBuffer [10];
+    // int processBuff;
+    // int releaseBuffer ;
+    // int deadLineBuffer;
+    // int weightBuffer;
+    // while( fscanf ( ptrFichier,"%s %d %d %d %d", idBuffer, &processBuff, &releaseBuffer, &deadLineBuffer, &weightBuffer ) != EOF ) {
+    //     Task * task = newTask( idBuffer, processBuff, releaseBuffer, deadLineBuffer, weightBuffer );
+    //     listInsertFirst( newInstance, ( void * ) task );
+    // }
+    // fclose( ptrFichier );
+    // return newInstance;
+    FILE * ptrFichier = fopen( filename,"r" ) ;
+    if( ! ptrFichier )
+        error("readInstance() : echec d'ouverture du fichier" );
+    Instance I = newList( &viewTask, &freeTask );
+    char buffId [10];
+    int buffProcTime = 0;
+    int buffReleaseTime = 0;
+    int buffDeadlineTime = 0;
+    int buffWeight = 0;
+    while( fscanf ( ptrFichier,"%s %d %d %d %d", buffId, &buffProcTime, &buffReleaseTime, &buffDeadlineTime, &buffWeight ) != EOF ) {
+        Task * task = newTask( buffId, buffProcTime, buffReleaseTime, buffDeadlineTime, buffWeight );
+        listInsertFirst( I, ( void * ) task );
     }
-    while (fgets(line, lineLength, fp) != NULL) {
-        sscanf(line, "%d %d %d %d %d", &id, &processingTime, &releaseTime, &deadline, &weight);
-        sprintf(idS, "%d", id);
-        //printf("%s\n",idS );
-        Task *taskn = newTask(idS, processingTime, releaseTime, deadline, weight);
-        listInsertLast(newInstance, taskn);
-    }
-    return newInstance;
+    fclose( ptrFichier );
+    return I;
 
 }
 
@@ -164,7 +176,7 @@ static int fcfs(const void *a, const void *b) {
     Task *tb = (Task *) b;
 
     if ((ta->releaseTime < tb->releaseTime)
-        || (ta->releaseTime == tb->releaseTime) && (ta->processingTime > tb->processingTime)) {
+        || ((ta->releaseTime == tb->releaseTime) && (ta->processingTime > tb->processingTime))) {
         return 1;
     } else {
         return 0;

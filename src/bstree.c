@@ -138,10 +138,9 @@ static BSTNode* rotateLeft(BSTNode* y) {
 	BSTNode* x=y->right;
 	y->right=x->left;
 	x->left=y;
-	int by=y->bfactor;
-	int byright=x->bfactor;
 	x->bfactor=hauteur(x->left)-hauteur(x->right);
 	y->bfactor=hauteur(y->left)-hauteur(y->right);
+	return x;
 
 }
 
@@ -166,6 +165,7 @@ static BSTNode* rotateRight(BSTNode* y) {
 	x->right=y;
 	x->bfactor=hauteur(x->left)-hauteur(x->right);
 	y->bfactor=hauteur(y->left)-hauteur(y->right);
+	return x;
 }
 
 /**
