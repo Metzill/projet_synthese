@@ -20,4 +20,7 @@ lien du git : https://github.com/Metzill/projet_synthese
 - TP guide JNI ✅
 - interface graphique ✅
 
-** Depot 1 14/05/2021 **
+** Depot 2 14/05/2021 **
+
+Projet entièrement fonctionnel, EBST non optimisé au vu des tests effectué
+
