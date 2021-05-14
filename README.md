@@ -16,11 +16,18 @@ lien du git : https://github.com/Metzill/projet_synthese
 - arbres binaires de recherche ✅
 - arbres binaires de recherche ́equilibre ~
 - instance & debut ordonnancement ✅
-- ordonnancement ❌
-- TP guide JNI ❌
-- interface graphique ❌
+- ordonnancement ✅
+- TP guide JNI ✅
+- interface graphique ✅
 
 ** Depot 1 02/04/2021 ** 
 
 Difficulté à mettre en place les "bfactors" lors de la création d'un EBST, rendant ces derniers inutilisable dans l'état actuel du projet
 
+
+** Depot 2 14/05/2021 ** 
+
+Projet entièrement fonctionnel, EBST non optimisé au vu des tests effectué
+
+Pour lancer le projet en Java : simplement faire un make run avec java
+Pour lancer le projet en C : renommer "Makefile" en "MakefileDodo" et renommer "MakefileSleep" en "Makefile" puis effectuer un "make run" dans le terminal
