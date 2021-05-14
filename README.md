@@ -5,8 +5,8 @@ lien du git : https://github.com/Metzill/projet_synthese
 
 - Télécharger l'archive du programme
 - Extraire le dossier du programme
-- Se placer à la racine du projet
-- Utiliser la commande "make run"
+- Se placer à le dossier java
+- Utiliser la commande "java -Djava.library.path=. --module-path PATH_TO_FX --add-modules javafx.fxml,javafx.controls,javafx.graphics application.main"
 
 
 **Projet de synthèse : Politiques d’ordonnancement des tâches dans un processeur**
@@ -16,11 +16,8 @@ lien du git : https://github.com/Metzill/projet_synthese
 - arbres binaires de recherche ✅
 - arbres binaires de recherche ́equilibre ~
 - instance & debut ordonnancement ✅
-- ordonnancement ❌
-- TP guide JNI ❌
-- interface graphique ❌
+- ordonnancement ✅
+- TP guide JNI ✅
+- interface graphique ✅
 
-** Depot 1 02/04/2021 ** 
-
-Difficulté à mettre en place les "bfactors" lors de la création d'un EBST, rendant ces derniers inutilisable dans l'état actuel du projet
-
+** Depot 1 14/05/2021 **
